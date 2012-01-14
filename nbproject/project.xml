@@ -9,7 +9,7 @@
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
-            <name>Base2012</name>
+            <name>grtframeworkv6</name>
             <properties>
                 <property-file>${user.home}/.sunspotfrc.properties</property-file>
                 <property-file>build.properties</property-file>
@@ -43,19 +43,6 @@
                 </action>
                 <action name="javadoc">
                     <target>javadoc</target>
-                </action>
-                <action name="run.single">
-                    <script>nbproject/ide-file-targets.xml</script>
-                    <target>run-selected-file-in-src</target>
-                    <context>
-                        <property>run.class</property>
-                        <folder>src</folder>
-                        <pattern>\.java$</pattern>
-                        <format>java-name</format>
-                        <arity>
-                            <one-file-only/>
-                        </arity>
-                    </context>
                 </action>
             </ide-actions>
             <export>
@@ -97,7 +84,7 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="boot">${sunspot.bootclasspath}</classpath>
-                <classpath mode="compile">/home/ajc/sunspotfrcsdk/lib/WPILibJ/classes.jar:/home/ajc/sunspotfrcsdk/lib/squawk_device.jar</classpath>
+                <classpath mode="compile">/home/gerberduffy/sunspotfrcsdk/lib/WPILibJ/classes.jar:/home/gerberduffy/sunspotfrcsdk/lib/squawk_device.jar</classpath>
                 <built-to>build</built-to>
                 <source-level>1.4</source-level>
             </compilation-unit>

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/201/branches/grtframeworkv6/src/actuator
+END
+GRTVictor.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/201/branches/grtframeworkv6/src/actuator/GRTVictor.java
+END
+IMotor.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/182/branches/grtframeworkv6/src/actuator/IMotor.java
+END
+GRTSolenoid.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/196/branches/grtframeworkv6/src/actuator/GRTSolenoid.java
+END
+GRTRelay.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/200/branches/grtframeworkv6/src/actuator/GRTRelay.java
+END
+GRTLed.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/188/branches/grtframeworkv6/src/actuator/GRTLed.java
+END
