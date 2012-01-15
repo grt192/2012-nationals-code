@@ -1,5 +1,7 @@
 package core;
 
+import rpc.RPCConnection;
+
 /**
  * A GRTLoggedProcess is a controllable process. It can be initiated/terminated.
  * 
@@ -10,12 +12,20 @@ package core;
  */
 public abstract class GRTLoggedProcess extends Thread implements IProcess {
 
+
+    private GRTDataLogger logger;
+
     protected final String name;
     protected boolean enabled = false;
     protected boolean running = true;
 
+
     public GRTLoggedProcess(String name) {
         this.name = name;
+    }
+
+    public void addDataLogger(GRTDataLogger logger){
+        this.logger = logger;
     }
 
     /**
@@ -40,7 +50,10 @@ public abstract class GRTLoggedProcess extends Thread implements IProcess {
      * @param data
      */
     protected void log(double data) {
-        System.out.println(toString() + "\t" + data);
+//        System.out.println(toString() + "\t" + data);
+        if(logger != null){
+            logger.log(data);
+        }
 
     }
 

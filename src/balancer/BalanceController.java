@@ -3,19 +3,19 @@
  * and open the template in the editor.
  */
 package balancer;
+
 import balancer.RobotTiltGyro;
 import core.EventController;
 import event.RobotTiltListener;
 import event.RobotTiltEvent;
 import mechanism.GRTRobotBase;
 
-
 /**
  *
  * @author calvin
  */
-public class BalanceController extends EventController implements RobotTiltListener{
-    
+public class BalanceController extends EventController implements RobotTiltListener {
+
     private double previousAngle;
     private double currentAngle;
     private double deltaAngle;
@@ -24,18 +24,18 @@ public class BalanceController extends EventController implements RobotTiltListe
     private final RobotTiltGyro robotTilt;
     private final GRTRobotBase base;
     private double DRIVE_THRESHOLD = .01;
-    
-    public BalanceController(GRTRobotBase base, RobotTiltGyro robotTilt, String name){
+
+    public BalanceController(GRTRobotBase base, RobotTiltGyro robotTilt, String name) {
         super(name);
         this.base = base;
         this.robotTilt = robotTilt;
     }
-    
-    public void startBalancing(){
+
+    public void startBalancing() {
         startListening();
     }
-    
-    public void stopBalancing(){
+
+    public void stopBalancing() {
         stopListening();
     }
 
@@ -51,13 +51,12 @@ public class BalanceController extends EventController implements RobotTiltListe
         currentAngle = e.getTilt();
         deltaAngle = currentAngle - previousAngle;
         double drivePower = P_CONSTANT * currentAngle - D_CONSTANT * deltaAngle;
-        if(Math.abs(drivePower) >= DRIVE_THRESHOLD)
+        if (Math.abs(drivePower) >= DRIVE_THRESHOLD) {
             base.tankDrive(drivePower, drivePower);
-        else 
+        } else {
             base.tankDrive(0, 0);
-        System.out.println(drivePower);
+        }
+
+        log(drivePower);
     }
-    
-    
-    
 }
