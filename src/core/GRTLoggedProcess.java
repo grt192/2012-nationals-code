@@ -45,6 +45,12 @@ public abstract class GRTLoggedProcess extends Thread implements IProcess {
         System.out.println(toString() + "\t" + name + "\t" + message); 
     }
 
+    protected void log(int channel, double data){
+        if(logger != null){
+            logger.log(channel,data);
+        }
+    }
+
     /**
      * 
      * @param data

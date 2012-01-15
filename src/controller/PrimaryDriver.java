@@ -58,13 +58,11 @@ public class PrimaryDriver extends EventController implements DrivingListener, D
 
     public void driverLeftSpeed(DrivingEvent e) {
         leftVelocity = e.getPercentSpeed();
-
         dt.tankDrive(driveProfile.driveSpeed(leftVelocity), driveProfile.driveSpeed(rightVelocity));
     }
 
     public void driverRightSpeed(DrivingEvent e) {
         rightVelocity = e.getPercentSpeed();
-
         dt.tankDrive(driveProfile.driveSpeed(leftVelocity), driveProfile.driveSpeed(rightVelocity));
     }
 

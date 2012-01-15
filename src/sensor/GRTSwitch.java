@@ -15,6 +15,9 @@ import java.util.Vector;
  * @author gerberduffy
  */
 public class GRTSwitch extends PollingSensor {
+
+    public static final double PRESSED = TRUE;
+    public static final double RELEASED = FALSE;
     
     private DigitalInput in;
     
@@ -37,14 +40,11 @@ public class GRTSwitch extends PollingSensor {
     }
 
     protected void poll() {
-        setState(STATE, isOn() ? TRUE : FALSE);
-        System.out.println(getState(STATE));
+        setState(STATE, isOn() ? PRESSED : RELEASED);
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {
-        
         SwitchEvent e = new SwitchEvent(this, newDatum);
-        
         for (int i=0; i < listeners.size(); i++){
             ((SwitchListener)listeners.elementAt(i)).switchStateChanged(e);
         }
