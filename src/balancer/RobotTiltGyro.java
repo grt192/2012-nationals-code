@@ -35,7 +35,12 @@ public class RobotTiltGyro extends Sensor implements GyroListener{
     }
     
     public void zero(){
-        zeroAngle = g.getAngle();
+        zero(0);
+    }
+    
+    public void zero(double angle){
+        zeroAngle = g.getAngle() + angle;
+        System.out.println("Current angle has been defined as " + angle + " degrees");
     }
     
     private void updateAngle(){
