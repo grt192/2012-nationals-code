@@ -10,7 +10,6 @@ import com.sun.squawk.util.MathUtils;
 import core.Sensor;
 import event.ADXL345Event;
 import event.ADXL345Listener;
-import event.RobotTiltEvent;
 import event.RobotTiltListener;
 import java.util.Vector;
 import sensor.GRTADXL345;
@@ -22,7 +21,7 @@ import sensor.GRTADXL345;
 public class RobotTiltAccel extends Sensor implements ADXL345Listener {
 
     private Vector robotTiltListeners;
-    private static final int NUM_DATA = 1;//TODO change
+    private static final int NUM_DATA = 1;
     public static final int KEY_ANGLE = 0;
     private double angle;
     private double xAccel;

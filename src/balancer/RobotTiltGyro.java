@@ -4,12 +4,12 @@
  */
 package balancer;
 import core.Sensor;
-import sensor.GRTGyro;
 import event.GyroEvent;
 import event.GyroListener;
-import java.util.Vector;
 import event.RobotTiltEvent;
 import event.RobotTiltListener;
+import java.util.Vector;
+import sensor.GRTGyro;
 
 /**
  *
@@ -19,8 +19,8 @@ import event.RobotTiltListener;
 
 public class RobotTiltGyro extends Sensor implements GyroListener{
     private Vector robotTiltListeners;
+    private double zeroAngle = 0;
     private double angle;
-    private double previousAngle;
     private GRTGyro g;
     
     public RobotTiltGyro(GRTGyro g, String name){
@@ -28,15 +28,18 @@ public class RobotTiltGyro extends Sensor implements GyroListener{
         this.g = g;
         robotTiltListeners = new Vector();
         angle = 0;
-        previousAngle = 0;
     }
+    
     public void angleChanged(GyroEvent e) {
         updateAngle();
     }
     
+    public void zero(){
+        zeroAngle = g.getAngle();
+    }
+    
     private void updateAngle(){
-        angle += g.getAngle() - previousAngle;
-        previousAngle = g.getAngle();
+        angle = g.getAngle() - zeroAngle;
         notifyStateChange(0, angle);
         notifyListeners(0, angle);
     }

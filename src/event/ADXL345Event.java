@@ -24,7 +24,7 @@ public class ADXL345Event {
         this.acceleration = acceleration;
     }
 
-    //TODO what units
+    //returns acceleration in g's (1g = 9.8 m/s^2)
     public double getAcceleration() {
         return acceleration;
     }
@@ -35,5 +35,5 @@ public class ADXL345Event {
 
     public GRTADXL345 getSource() {
         return source;
-    }
+    }//TODO change
 }

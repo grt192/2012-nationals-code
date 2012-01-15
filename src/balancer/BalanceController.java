@@ -19,8 +19,8 @@ public class BalanceController extends EventController implements RobotTiltListe
     private double previousAngle;
     private double currentAngle;
     private double deltaAngle;
-    private double P_CONSTANT = .024;
-    private double D_CONSTANT = 0;
+    private double PConstant = .024;
+    private double DConstant = 0;
     private final RobotTiltGyro robotTilt;
     private final GRTRobotBase base;
     private double DRIVE_THRESHOLD = .01;
@@ -50,12 +50,18 @@ public class BalanceController extends EventController implements RobotTiltListe
     public void RobotTiltChange(RobotTiltEvent e) {
         currentAngle = e.getTilt();
         deltaAngle = currentAngle - previousAngle;
-        double drivePower = P_CONSTANT * currentAngle - D_CONSTANT * deltaAngle;
+        double drivePower = PConstant * currentAngle - DConstant * deltaAngle;
         if(Math.abs(drivePower) >= DRIVE_THRESHOLD)
             base.tankDrive(drivePower, drivePower);
         else 
             base.tankDrive(0, 0);
         System.out.println(drivePower);
+    }
+    
+    public void setPD(double P, double D){
+        PConstant = P;
+        DConstant = D;
+        System.out.println("PD Constants updated: P = " + P + ", D = " + D);
     }
     
     
