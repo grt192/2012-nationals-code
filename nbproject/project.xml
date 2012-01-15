@@ -84,7 +84,7 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="boot">${sunspot.bootclasspath}</classpath>
-                <classpath mode="compile">/home/ajc/sunspotfrcsdk/lib/WPILibJ/classes.jar:/home/ajc/sunspotfrcsdk/lib/squawk_device.jar</classpath>
+                <classpath mode="compile">/home/ajc/sunspotfrcsdk/lib/WPILibJ/classes.jar:/home/ajc/sunspotfrcsdk/lib/squawk_device.jar:/Users/keshav/sunspotfrcsdk/lib/squawk_device.jar:/Users/keshav/sunspotfrcsdk/lib/WPILibJ/classes.jar</classpath>
                 <built-to>build</built-to>
                 <source-level>1.4</source-level>
             </compilation-unit>
