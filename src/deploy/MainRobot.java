@@ -5,25 +5,17 @@
 package deploy;
 
 import actuator.GRTVictor;
-import balancer.RobotTiltAccel;
 import balancer.RobotTiltGyro;
+import balancer.BalanceController;
 import controller.PrimaryDriver;
 import mechanism.GRTDriveTrain;
-import sensor.base.GRTXboxDriverStation;
 import mechanism.GRTRobotBase;
-import sensor.base.LinearDrive;
-import sensor.base.SquareDrive;
-import sensor.base.IDriverProfile;
 import rpc.connection.NetworkRPC;
 import rpc.telemetry.SensorLogger;
-import sensor.ADXL345DigitalAccelerometer;
-import sensor.GRTADXL345;
 import sensor.GRTAttack3Joystick;
 import sensor.GRTBatterySensor;
 import sensor.GRTEncoder;
 import sensor.GRTGyro;
-import sensor.GRTSwitch;
-import sensor.GRTXBoxJoystick;
 import sensor.base.*;
 
 /**
@@ -48,10 +40,11 @@ public class MainRobot extends GRTRobot {
     private PrimaryDriver driveControl;
     private GRTDriverStation driverStation;
     private GRTRobotBase robotBase;
-    private GRTADXL345 adxl;
+//    private GRTADXL345 adxl;
 //    private final ADXL345DigitalAccelerometer primaryADXL;
     private final RobotTiltGyro tiltSensor;
     private final SensorLogger tiltLogger;
+//    private BalanceController balanceController;
     
 
     public MainRobot() {
@@ -84,7 +77,7 @@ public class MainRobot extends GRTRobot {
         leftDT2.enable();
         rightDT1.enable();
         rightDT2.enable();
-        System.out.println("Motors initialized");
+        System.out.println("Motors initializethisd");
 
         //Mechanisms
         GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2);
@@ -110,14 +103,21 @@ public class MainRobot extends GRTRobot {
         
         tiltSensor = new RobotTiltGyro(gyro, "TiltSensor");
         tiltLogger = new SensorLogger(tiltSensor, rpcConn, new int[]{210}, "tiltLogger");
+        
+//        balanceController = new BalanceController(robotBase, tiltSensor, primary, "Balancer");
         tiltLogger.enable();
         // Start/prepare controllers
 //        primaryADXL.enable();
         batteryLogger.enable();
         tiltSensor.enable();
         
+//        balanceController.enable();
+
+        tiltSensor.start();
+//        balanceController.start();
+        
         addTeleopController(driveControl);
-        addAutonomousController(tiltLogger);
+//        addAutonomousController(balanceController);
 
         GRTEncoder encoder1 =  new GRTEncoder(2, 1, 4.0, 10, "EncoderLeft");
         

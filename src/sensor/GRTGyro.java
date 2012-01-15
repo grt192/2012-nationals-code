@@ -35,7 +35,6 @@ public class GRTGyro extends PollingSensor {
     protected void poll() {
         setState(KEY_ANGLE, gyro.getAngle());
         
-        System.out.println("Gyro: \t" +  getState(KEY_ANGLE));
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {

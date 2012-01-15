@@ -39,6 +39,7 @@ public class GRTDriveTrain {
      * @param rightVelocity
      */
     public void tankDrive(double leftVelocity, double rightVelocity) {
+//        System.out.println("left:" + (-leftVelocity) + "\tright:" + -rightVelocity);
         leftFront.setSpeed(-leftVelocity);
         leftBack.setSpeed(-leftVelocity);
         rightFront.setSpeed(-rightVelocity);
