@@ -31,7 +31,7 @@ public class DrivingEvent {
     public double getPercentSpeed() {
         return value;
     }
-
+	
     public GRTDriverStation getSource() {
         return source;
     }

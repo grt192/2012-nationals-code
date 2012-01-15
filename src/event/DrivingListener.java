@@ -21,5 +21,11 @@ public interface DrivingListener {
      * @param e 
      */
     public void driverRightSpeed(DrivingEvent e);
-    
+	
+	/**
+     * Called to cause a turn
+     * @param e 
+     */
+	public void driverTurn(DrivingTurnEvent e);
+	
 }

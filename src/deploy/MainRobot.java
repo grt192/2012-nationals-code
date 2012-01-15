@@ -83,7 +83,7 @@ public class MainRobot extends GRTRobot {
         tiltSensor.enable();
 
 
-        
+
         // Start/prepare controllers
 //        primaryADXL.enable();
 
@@ -111,7 +111,7 @@ public class MainRobot extends GRTRobot {
         dt.addDataLogger(new RPCLogger(rpcConn));
         robotBase = new GRTRobotBase(dt, batterySensor);
         driverStation = new GRTAttack3DriverStation(primary, secondary, DRIVER_PROFILE_KEYS, DRIVER_PROFILES,
-                "driverStation");
+                4, 5, "driverStation");
         driverStation.enable();
         System.out.println("Mechanisms initialized");
 

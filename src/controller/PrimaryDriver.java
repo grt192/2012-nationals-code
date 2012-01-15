@@ -6,12 +6,7 @@ package controller;
 
 import core.EventController;
 import edu.wpi.first.wpilibj.DriverStation;
-import event.DrivingEvent;
-import event.DrivingListener;
-import event.DrivingProfileEvent;
-import event.DrivingProfileListener;
-import event.XboxJoystickEvent;
-import event.XboxJoystickListener;
+import event.*;
 import mechanism.GRTDriveTrain;
 import sensor.base.GRTXboxDriverStation;
 import mechanism.GRTRobotBase;
@@ -63,7 +58,12 @@ public class PrimaryDriver extends EventController implements DrivingListener, D
 
     public void driverRightSpeed(DrivingEvent e) {
         rightVelocity = e.getPercentSpeed();
+        rightVelocity = e.getPercentSpeed();
         dt.tankDrive(driveProfile.driveSpeed(leftVelocity), driveProfile.driveSpeed(rightVelocity));
+    }
+
+    public void driverTurn(DrivingTurnEvent e) {
+        dt.turn(90);
     }
 
     public void drivingProfileChanged(DrivingProfileEvent e) {
