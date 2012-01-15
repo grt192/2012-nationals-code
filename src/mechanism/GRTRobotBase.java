@@ -32,4 +32,13 @@ public class GRTRobotBase {
     public void tankDrive(double leftVelocity, double rightVelocity){
         dt.tankDrive(leftVelocity, rightVelocity);
     }
+	//commands a turn
+	public void turn(int time) {
+		dt.tankDrive(1, -1);
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
 }
