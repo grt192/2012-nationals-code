@@ -10,10 +10,10 @@ package event;
  */
 public interface EncoderListener {
     
-    public void rotationStarted(EncoderEvent e);
+    public void directionChanged(EncoderEvent e);
     
     public void degreeChanged(EncoderEvent e);
     
-    public void rotationStopped(EncoderEvent e);
+    public void distanceChanged(EncoderEvent e);
     
 }

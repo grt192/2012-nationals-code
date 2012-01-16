@@ -4,6 +4,7 @@
  */
 package event;
 
+import sensor.GRTADXL345;
 import sensor.GRTEncoder;
 
 /**
@@ -12,12 +13,25 @@ import sensor.GRTEncoder;
  */
 public class EncoderEvent {
     
-    public static final int ROTATION_STARTED = 0;
-    public static final int ROTATION_STOPPED = 1;
-    public static final int DEGREE_CHANGE = 2;
-    
-    public EncoderEvent(GRTEncoder source){
-        
+	private GRTEncoder source;
+    private int id;
+    private double value;
+	
+    public EncoderEvent(GRTEncoder source, int id, double value){
+        this.source = source;
+		this.id = id;
+		this.value = value;
+    }
+	public double getValue() {
+        return value;
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public GRTEncoder getSource() {
+        return source;
     }
     
 }

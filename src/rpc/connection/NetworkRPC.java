@@ -53,6 +53,7 @@ public class NetworkRPC implements RPCConnection, SocketListener {
     }
 
     private void notifyListeners(String received) {
+        System.out.println("NetworkRPC recieved message:" + received);
         if (isTelemetryLine(received)) {
             // RPCMessage message = new RPCMessage(getKey(received),
             // getData(received));

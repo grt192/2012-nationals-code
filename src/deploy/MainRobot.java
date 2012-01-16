@@ -5,9 +5,12 @@
 package deploy;
 
 import actuator.GRTVictor;
+import balancer.BalanceController;
+import balancer.RobotTiltAccel;
 import balancer.RobotTiltGyro;
 import balancer.BalanceController;
 import controller.PrimaryDriver;
+import logger.RPCLogger;
 import mechanism.GRTDriveTrain;
 import mechanism.GRTRobotBase;
 import rpc.connection.NetworkRPC;
@@ -29,11 +32,8 @@ public class MainRobot extends GRTRobot {
      * First index refers to Linear drive
      * Second index refers to Square drive
      */
-    public static final int[] DRIVER_PROFILE_KEYS = new int[] {1,2};
-    public static final IDriverProfile[] DRIVER_PROFILES = new IDriverProfile[] {new LinearDrive(), new SquareDrive()};
-    
-
-    
+    public static final int[] DRIVER_PROFILE_KEYS = new int[]{1, 2};
+    public static final IDriverProfile[] DRIVER_PROFILES = new IDriverProfile[]{new LinearDrive(), new SquareDrive()};
     //Global Controllers
     private SensorLogger batteryLogger;
     //Teleop Controllers
@@ -44,8 +44,7 @@ public class MainRobot extends GRTRobot {
 //    private final ADXL345DigitalAccelerometer primaryADXL;
     private final RobotTiltGyro tiltSensor;
     private final SensorLogger tiltLogger;
-//    private BalanceController balanceController;
-    
+    private BalanceController balancer;
 
     public MainRobot() {
 
@@ -68,6 +67,27 @@ public class MainRobot extends GRTRobot {
         batterySensor.start();
         batterySensor.enable();
 
+
+        GRTGyro gyro = new GRTGyro(1, 10, "Gyro");
+        gyro.enable();
+        gyro.start();
+
+        tiltSensor = new RobotTiltGyro(gyro, "TiltSensor");
+        tiltSensor.enable();
+
+
+
+        // Start/prepare controllers
+//        primaryADXL.enable();
+
+        GRTEncoder encoder1 = new GRTEncoder(2, 1, 4.0, 10, "EncoderLeft");
+        GRTEncoder encoder2 = new GRTEncoder(3, 4, 4.0, 10, "EncoderRight");
+        encoder1.start();
+        encoder1.enable();
+        encoder2.start();
+        encoder2.enable();
+
+
         // PWM outputs
         GRTVictor leftDT1 = new GRTVictor(2, "leftDT1");
         GRTVictor leftDT2 = new GRTVictor(3, "leftDT2");
@@ -80,58 +100,41 @@ public class MainRobot extends GRTRobot {
         System.out.println("Motors initializethisd");
 
         //Mechanisms
-        GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2);
+        GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2, "dt");
+        dt.addDataLogger(new RPCLogger(rpcConn));
         robotBase = new GRTRobotBase(dt, batterySensor);
         driverStation = new GRTAttack3DriverStation(primary, secondary, DRIVER_PROFILE_KEYS, DRIVER_PROFILES,
-                "driverStation");
+                4, 5, "driverStation");
         driverStation.enable();
         System.out.println("Mechanisms initialized");
 
         //Controllers
         driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
-        batteryLogger = new SensorLogger(batterySensor, rpcConn, new int[]{23}, "batterylogger");
+//        balancer = new BalanceController(robotBase, tiltSensor, "balanceController");
+        balancer.addDataLogger(new RPCLogger(rpcConn, 100));
         System.out.println("Controllers Initialized");
-        
+
 //        adxl = new  GRTADXL345(1, 25, "ADXL345");
 //        adxl.enable();
 //        adxl.start();
 
-        
-        GRTGyro gyro = new GRTGyro(1, 10, "Gyro");
-        gyro.enable();
-        gyro.start();
-        
-        tiltSensor = new RobotTiltGyro(gyro, "TiltSensor");
+        SensorLogger encoderLogger1 = new SensorLogger(encoder1, rpcConn, new int[]{81, 82, 83}, null);
+        SensorLogger encoderLogger2 = new SensorLogger(encoder2, rpcConn, new int[]{84, 85, 86}, null);
+        encoderLogger1.enable();
+        encoderLogger2.enable();
+
         tiltLogger = new SensorLogger(tiltSensor, rpcConn, new int[]{210}, "tiltLogger");
         
 //        balanceController = new BalanceController(robotBase, tiltSensor, primary, "Balancer");
         tiltLogger.enable();
-        // Start/prepare controllers
-//        primaryADXL.enable();
+
+        batteryLogger = new SensorLogger(batterySensor, rpcConn, new int[]{23}, "batterylogger");
         batteryLogger.enable();
-        tiltSensor.enable();
-        
-//        balanceController.enable();
 
-        tiltSensor.start();
-//        balanceController.start();
-        
+
+
         addTeleopController(driveControl);
-//        addAutonomousController(balanceController);
-
-        GRTEncoder encoder1 =  new GRTEncoder(2, 1, 4.0, 10, "EncoderLeft");
-        
-        GRTEncoder encoder2 = new GRTEncoder(3, 4, 4.0, 10, "EncoderRight");
-        
-        
-        encoder1.start(); encoder1.enable();
-        encoder2.start(); encoder2.enable();
-        
-        SensorLogger encoderLogger1 = new SensorLogger(encoder1, rpcConn, new int[]{81, 82, 83}, null);
-        SensorLogger encoderLogger2 = new SensorLogger(encoder2, rpcConn, new int[]{84,85,86}, null);
-        
-        
-        encoderLogger1.enable();
-        encoderLogger2.enable();
+        addAutonomousController(balancer);
+        System.out.println("All systems go!");
     }
 }

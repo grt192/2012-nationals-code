@@ -5,12 +5,13 @@
 package mechanism;
 
 import actuator.IMotor;
+import core.GRTLoggedProcess;
 
 /**
  * Standard 4 motor drivetrain.
  * @author ajc
  */
-public class GRTDriveTrain {
+public class GRTDriveTrain extends GRTLoggedProcess {
 
     private final IMotor leftFront;
     private final IMotor leftBack;
@@ -25,13 +26,14 @@ public class GRTDriveTrain {
      * @param rightBack right back motor
      */
     public GRTDriveTrain(IMotor leftFront, IMotor leftBack,
-            IMotor rightFront, IMotor rightBack) {
-                
+            IMotor rightFront, IMotor rightBack, String name) {
+        super(name);
         this.leftFront = leftFront;
         this.leftBack = leftBack;
         this.rightFront = rightFront;
         this.rightBack = rightBack;
     }
+
 
     /**
      * TankDrive uses differential steering.
@@ -42,7 +44,9 @@ public class GRTDriveTrain {
 //        System.out.println("left:" + (-leftVelocity) + "\tright:" + -rightVelocity);
         leftFront.setSpeed(-leftVelocity);
         leftBack.setSpeed(-leftVelocity);
+        log(100, leftVelocity);
         rightFront.setSpeed(-rightVelocity);
         rightBack.setSpeed(-rightVelocity);
+        log(101, rightVelocity);
     }
 }
