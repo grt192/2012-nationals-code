@@ -89,10 +89,10 @@ public class MainRobot extends GRTRobot {
 
 
         // PWM outputs
-        GRTVictor leftDT1 = new GRTVictor(2, "leftDT1");
-        GRTVictor leftDT2 = new GRTVictor(3, "leftDT2");
-        GRTVictor rightDT1 = new GRTVictor(8, "rightDT1");
-        GRTVictor rightDT2 = new GRTVictor(9, "rightDT2");
+        GRTVictor leftDT1 = new GRTVictor(7, "leftDT1");
+        GRTVictor leftDT2 = new GRTVictor(8, "leftDT2");
+        GRTVictor rightDT1 = new GRTVictor(9, "rightDT1");
+        GRTVictor rightDT2 = new GRTVictor(10, "rightDT2");
         leftDT1.enable();
         leftDT2.enable();
         rightDT1.enable();
@@ -102,16 +102,16 @@ public class MainRobot extends GRTRobot {
         //Mechanisms
         GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2, "dt");
         dt.addDataLogger(new RPCLogger(rpcConn));
-        robotBase = new GRTRobotBase(dt, batterySensor);
+        robotBase = new GRTRobotBase(dt, batterySensor, encoder1, encoder2);
         driverStation = new GRTAttack3DriverStation(primary, secondary, DRIVER_PROFILE_KEYS, DRIVER_PROFILES,
-                4, 5, "driverStation");
+                4, 5, 6, "driverStation");
         driverStation.enable();
         System.out.println("Mechanisms initialized");
 
         //Controllers
         driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
 //        balancer = new BalanceController(robotBase, tiltSensor, "balanceController");
-        balancer.addDataLogger(new RPCLogger(rpcConn, 100));
+        //balancer.addDataLogger(new RPCLogger(rpcConn, 100));
         System.out.println("Controllers Initialized");
 
 //        adxl = new  GRTADXL345(1, 25, "ADXL345");
@@ -134,7 +134,7 @@ public class MainRobot extends GRTRobot {
 
 
         addTeleopController(driveControl);
-        addAutonomousController(balancer);
+        //addAutonomousController(balancer);
         System.out.println("All systems go!");
     }
 }

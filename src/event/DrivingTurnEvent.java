@@ -13,23 +13,14 @@ import sensor.base.GRTDriverStation;
 public class DrivingTurnEvent {
 
     private final GRTDriverStation source;
-    private final double value;
+    private final double degree;
 
-    public DrivingTurnEvent(GRTDriverStation source, double value) {
+    public DrivingTurnEvent(GRTDriverStation source, double degree) {
         this.source = source;
-        this.value = value;
-    
+        this.degree = degree;
     }
 	
-	public double getMotorDegreeChange() {
-		return value;
-	}
-
-	public double getRobotDegreeChange() {
-		return value;
-	}
-
-    public GRTDriverStation getSource() {
-        return source;
+	public double getDegree() {
+		return degree;
     }
 }
