@@ -89,10 +89,10 @@ public class MainRobot extends GRTRobot {
 
 
         // PWM outputs
-        GRTVictor leftDT1 = new GRTVictor(7, "leftDT1");
-        GRTVictor leftDT2 = new GRTVictor(8, "leftDT2");
-        GRTVictor rightDT1 = new GRTVictor(9, "rightDT1");
-        GRTVictor rightDT2 = new GRTVictor(10, "rightDT2");
+        GRTVictor leftDT1 = new GRTVictor(2, "leftDT1");
+        GRTVictor leftDT2 = new GRTVictor(3, "leftDT2");
+        GRTVictor rightDT1 = new GRTVictor(8, "rightDT1");
+        GRTVictor rightDT2 = new GRTVictor(9, "rightDT2");
         leftDT1.enable();
         leftDT2.enable();
         rightDT1.enable();
