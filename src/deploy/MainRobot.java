@@ -102,16 +102,16 @@ public class MainRobot extends GRTRobot {
         //Mechanisms
         GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2, "dt");
         dt.addDataLogger(new RPCLogger(rpcConn));
-        robotBase = new GRTRobotBase(dt, batterySensor);
+        robotBase = new GRTRobotBase(dt, batterySensor, encoder1, encoder2);
         driverStation = new GRTAttack3DriverStation(primary, secondary, DRIVER_PROFILE_KEYS, DRIVER_PROFILES,
-                4, 5, "driverStation");
+                4, 5, 6, "driverStation");
         driverStation.enable();
         System.out.println("Mechanisms initialized");
 
         //Controllers
         driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
 //        balancer = new BalanceController(robotBase, tiltSensor, "balanceController");
-        balancer.addDataLogger(new RPCLogger(rpcConn, 100));
+        //balancer.addDataLogger(new RPCLogger(rpcConn, 100));
         System.out.println("Controllers Initialized");
 
 //        adxl = new  GRTADXL345(1, 25, "ADXL345");
@@ -134,7 +134,7 @@ public class MainRobot extends GRTRobot {
 
 
         addTeleopController(driveControl);
-        addAutonomousController(balancer);
+        //addAutonomousController(balancer);
         System.out.println("All systems go!");
     }
 }

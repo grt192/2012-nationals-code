@@ -63,7 +63,7 @@ public class PrimaryDriver extends EventController implements DrivingListener, D
     }
 
     public void driverTurn(DrivingTurnEvent e) {
-        dt.turn(90);
+        dt.turn(e.getDegree());
     }
 
     public void drivingProfileChanged(DrivingProfileEvent e) {

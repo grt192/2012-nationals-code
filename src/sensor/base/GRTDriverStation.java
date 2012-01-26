@@ -66,7 +66,7 @@ public abstract class GRTDriverStation extends Sensor {
 		profileListeners.removeElement(l);
 	}
 
-	protected void notifyDriveTurn(double degrees) {
+	protected void notifyDriveTurn( double degrees) {
 		DrivingTurnEvent ev = new DrivingTurnEvent(this, degrees);
 		for (int i = 0; i < drivingListeners.size(); i++) {
 			((DrivingListener) drivingListeners.elementAt(i)).driverTurn(ev);
