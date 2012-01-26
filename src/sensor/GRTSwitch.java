@@ -21,8 +21,8 @@ public class GRTSwitch extends PollingSensor {
     
     private DigitalInput in;
     
-    private static final int STATE = 0;
-    private static final int NUM_DATA = 1;
+    public static final int STATE = 0;
+    public static final int NUM_DATA = 1;
     
     private Vector listeners;
     

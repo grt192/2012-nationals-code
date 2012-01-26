@@ -13,11 +13,11 @@ import sensor.GRTSwitch;
  */
 public class SwitchEvent {
     
-    private boolean state;
+    private double state;
     private GRTSwitch sw;
     
     public SwitchEvent(GRTSwitch sw, double newState){
-        state = newState == PollingSensor.TRUE;
+        state = newState;
         this.sw = sw;
     }
     
@@ -25,7 +25,7 @@ public class SwitchEvent {
         return this.sw;
     }
     
-    public boolean getState(){
+    public double getState(){
         return this.state;
     }
 }
