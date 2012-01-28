@@ -51,11 +51,11 @@ public class GRTAttack3DriverStation extends GRTDriverStation implements Attack3
     public void yAxisMoved(Attack3JoystickEvent e) {
         if (e.getSource()==left){
             notifyLeftDriveSpeed(e.getValue());
-            notifyStateChange(KEY_LEFT_VELOCITY, e.getValue());
+         //   notifyStateChange(KEY_LEFT_VELOCITY, e.getValue());
         }
         else if (e.getSource() ==right){
             notifyRightDriveSpeed(e.getValue());
-            notifyStateChange(KEY_RIGHT_VELOCITY, e.getValue());
+         //   notifyStateChange(KEY_RIGHT_VELOCITY, e.getValue());
         }
     }
 

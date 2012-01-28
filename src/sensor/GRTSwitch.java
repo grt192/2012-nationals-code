@@ -41,6 +41,8 @@ public class GRTSwitch extends PollingSensor {
 
     protected void poll() {
         setState(KEY_STATE, isOn() ? PRESSED : RELEASED);
+        
+        System.out.println(isOn());
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {
