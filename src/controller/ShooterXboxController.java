@@ -19,45 +19,45 @@ public class ShooterXboxController extends EventController implements ButtonList
 		this.xbox = xbox;
 	}
 
-	@Override
+	
 	protected void startListening() {
 		// TODO Auto-generated method stub
 		xbox.addButtonListener(this);
 		xbox.addJoystickListener(this);
 	}
 
-	@Override
+	
 	protected void stopListening() {
 		// TODO Auto-generated method stub
 		xbox.removeButtonListener(this);
 		xbox.removeJoystickListener(this);
 	}
 
-	@Override
+	
 	public void leftXAxisMoved(XboxJoystickEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void leftYAxisMoved(XboxJoystickEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void leftAngleChanged(XboxJoystickEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void rightXAxisMoved(XboxJoystickEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void rightYAxisMoved(XboxJoystickEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == xbox){
@@ -65,19 +65,19 @@ public class ShooterXboxController extends EventController implements ButtonList
 		}
 	}
 
-	@Override
+	
 	public void padMoved(XboxJoystickEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void triggerMoved(XboxJoystickEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void buttonPressed(ButtonEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == xbox && e.getButtonID() == GRTXBoxJoystick.KEY_BUTTON_5){//RB Button
@@ -85,7 +85,7 @@ public class ShooterXboxController extends EventController implements ButtonList
 		}
 	}
 
-	@Override
+	
 	public void buttonReleased(ButtonEvent e) {
 		// TODO Auto-generated method stub
 		
