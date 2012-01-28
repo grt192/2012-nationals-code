@@ -4,7 +4,6 @@
  */
 package event;
 
-import core.PollingSensor;
 import sensor.GRTSwitch;
 
 /**

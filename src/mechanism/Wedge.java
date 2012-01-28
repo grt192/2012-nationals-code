@@ -48,7 +48,7 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener{
     
     public void raiseWedge(){
         targetState = UP;
-        if(limitUp.getState(GRTSwitch.STATE) == GRTSwitch.RELEASED)
+        if(limitUp.getState(GRTSwitch.KEY_STATE) == GRTSwitch.RELEASED)
             motor.setSpeed(1);
     }
     
@@ -59,7 +59,7 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener{
     
     public void lowerWedge(){
         targetState = DOWN;
-        if(limitDown.getState(GRTSwitch.STATE) == GRTSwitch.RELEASED)
+        if(limitDown.getState(GRTSwitch.KEY_STATE) == GRTSwitch.RELEASED)
             motor.setSpeed(-1);
     }
     

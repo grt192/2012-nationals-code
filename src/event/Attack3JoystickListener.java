@@ -9,7 +9,7 @@ package event;
  * @author dan
  */
 public interface Attack3JoystickListener {
-    public void XAxisMoved(Attack3JoystickEvent e);
-    public void YAxisMoved(Attack3JoystickEvent e);
-    public void AngleChanged(Attack3JoystickEvent e);
+    public void xAxisMoved(Attack3JoystickEvent e);
+    public void yAxisMoved(Attack3JoystickEvent e);
+    public void angleChanged(Attack3JoystickEvent e);
 }

@@ -45,10 +45,10 @@ public class GRTAttack3DriverStation extends GRTDriverStation implements Attack3
         right.removeButtonListener(this);
     }
 
-    public void XAxisMoved(Attack3JoystickEvent e) {
+    public void xAxisMoved(Attack3JoystickEvent e) {
     }
 
-    public void YAxisMoved(Attack3JoystickEvent e) {
+    public void yAxisMoved(Attack3JoystickEvent e) {
         if (e.getSource()==left){
             notifyLeftDriveSpeed(e.getValue());
             notifyStateChange(KEY_LEFT_VELOCITY, e.getValue());
@@ -59,7 +59,7 @@ public class GRTAttack3DriverStation extends GRTDriverStation implements Attack3
         }
     }
 
-    public void AngleChanged(Attack3JoystickEvent e) {
+    public void angleChanged(Attack3JoystickEvent e) {
     }
 
     public void buttonPressed(ButtonEvent e) {

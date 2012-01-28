@@ -33,7 +33,6 @@ public class GRTVictor extends Actuator implements IMotor {
     public void setSpeed(double speed){
         if(enabled){
             victor.set(speed);
-//            log(speed);
         }
     }
 }

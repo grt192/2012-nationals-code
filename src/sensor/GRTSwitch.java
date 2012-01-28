@@ -21,7 +21,7 @@ public class GRTSwitch extends PollingSensor {
     
     private DigitalInput in;
     
-    public static final int STATE = 0;
+    public static final int KEY_STATE = 0;
     public static final int NUM_DATA = 1;
     
     private Vector listeners;
@@ -40,7 +40,7 @@ public class GRTSwitch extends PollingSensor {
     }
 
     protected void poll() {
-        setState(STATE, isOn() ? PRESSED : RELEASED);
+        setState(KEY_STATE, isOn() ? PRESSED : RELEASED);
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {

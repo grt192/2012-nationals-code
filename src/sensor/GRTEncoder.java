@@ -29,7 +29,9 @@ public class GRTEncoder extends PollingSensor {
         super(id, pollTime, NUM_DATA);
         rotaryEncoder = new Encoder(channelA, channelB);
         rotaryEncoder.start();
-
+        
+        rotaryEncoder.setDistancePerPulse(distancePerPulse);
+        
         distancePerPulse = pulseDistance;
         listeners = new Vector();
     }
@@ -38,6 +40,8 @@ public class GRTEncoder extends PollingSensor {
         setState(KEY_DISTANCE, rotaryEncoder.getDistance());
         setState(KEY_DEGREES, rotaryEncoder.getDistance() / distancePerPulse);
         setState(KEY_DIRECTION, rotaryEncoder.getDirection() ? TRUE : FALSE);
+        
+//        System.out.println(toString() + " Count: " + rotaryEncoder.get());
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {

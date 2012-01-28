@@ -72,17 +72,17 @@ public class GRTAttack3Joystick extends PollingSensor {
          switch (id){
              case (KEY_X):
                  for (int i = 0; i < joystickListeners.size(); i++) {
-                    ((Attack3JoystickListener)joystickListeners.elementAt(i)).XAxisMoved(e);
+                    ((Attack3JoystickListener)joystickListeners.elementAt(i)).xAxisMoved(e);
                  }
                  break;
              case (KEY_Y):
                  for (int i = 0; i < joystickListeners.size(); i++) {
-                    ((Attack3JoystickListener)joystickListeners.elementAt(i)).YAxisMoved(e);
+                    ((Attack3JoystickListener)joystickListeners.elementAt(i)).yAxisMoved(e);
                  }
                  break;
              case (KEY_JOYSTICK_ANGLE):
                  for (int i = 0; i < joystickListeners.size(); i++) {
-                    ((Attack3JoystickListener)joystickListeners.elementAt(i)).AngleChanged(e);
+                    ((Attack3JoystickListener)joystickListeners.elementAt(i)).angleChanged(e);
                  }
                  break;
          }
