@@ -23,14 +23,41 @@ public class GRTSwitch extends PollingSensor {
     public static final int NUM_DATA = 1;
     private Vector listeners;
 
-    public GRTSwitch(int slot, int polltime, String id) {
+    /**
+     * Create a switch on the specified channel of the default module.
+     * 
+     * @param channel The channel
+     * @param polltime  Time in between polls
+     * @param id String name of the switch
+     */
+    public GRTSwitch(int channel, int polltime, String id) {
 
         super(id, polltime, NUM_DATA);
 
-        in = new DigitalInput(slot);
+        in = new DigitalInput(channel);
 
         listeners = new Vector();
     }
+    
+    /**
+     * Create a switch on the specified channel of the specified module.
+     * 
+     * @param module The module number
+     * @param channel The channel
+     * @param polltime  Time in between polls
+     * @param id String name of the switch
+     */
+    public GRTSwitch(int module, int channel, int polltime, String id) {
+
+        super(id, polltime, NUM_DATA);
+
+        in = new DigitalInput(module, channel);
+
+        listeners = new Vector();
+    }
+    
+    
+    
 
     public void addSwitchListener(SwitchListener l) {
         listeners.addElement(l);

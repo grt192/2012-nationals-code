@@ -11,6 +11,7 @@ import balancer.RobotTiltGyro;
 import balancer.BalanceController;
 import controller.PrimaryDriver;
 import controller.TestController;
+import controller.TurretController;
 import controller.WedgeAttack3Controller;
 import logger.RPCLogger;
 import mechanism.GRTDriveTrain;
@@ -38,9 +39,9 @@ public class MainRobot extends GRTRobot {
     //Global Controllers
 //    private SensorLogger batteryLogger;
     //Teleop Controllers
-//    private PrimaryDriver driveControl;
-//    private GRTDriverStation driverStation;
-//    private GRTRobotBase robotBase;
+    private PrimaryDriver driveControl;
+    private GRTRobotDriver driverStation;
+    private GRTRobotBase robotBase;
 //    private GRTADXL345 adxl;
 //    private final ADXL345DigitalAccelerometer primaryADXL;
 //    private final RobotTiltGyro tiltSensor;
@@ -57,10 +58,15 @@ public class MainRobot extends GRTRobot {
         //Driver station components
         GRTAttack3Joystick primary = new GRTAttack3Joystick(1, 12, "primary");
         GRTAttack3Joystick secondary = new GRTAttack3Joystick(2, 12, "secondary");
+        
+        GRTXBoxJoystick tertiary = new GRTXBoxJoystick(3, 12, "Xbox Joystick");
+        
         primary.start();
         secondary.start();
         primary.enable();
         secondary.enable();
+        tertiary.start();
+        tertiary.enable();
         System.out.println("Joysticks initialized");
 
         //Battery Sensor
@@ -88,11 +94,22 @@ public class MainRobot extends GRTRobot {
       GRTVictor rightDT1 = new GRTVictor(2, 3, "rightDT1");
       GRTVictor rightDT2 = new GRTVictor(2, 4, "rightDT2");
       
+      
       leftDT1.start();leftDT1.enable();
       leftDT2.start();leftDT2.enable();
       rightDT1.start();rightDT1.enable();
       rightDT2.start();rightDT2.enable();
 
+      
+      //Mechanism Victors
+      GRTVictor wedgeVictor = new GRTVictor(1, 5, "Wedge Victor");
+      GRTVictor rotationVictor = new GRTVictor(1, 6, "Turret Rotator Victor");
+      GRTVictor visorVictor = new GRTVictor(1, 7, "Visor Tilt Victor");
+      
+      wedgeVictor.start(); wedgeVictor.enable();
+      rotationVictor.start(); rotationVictor.enable();
+      visorVictor.start(); visorVictor.enable();
+      
 //        
 //        GRTVictor[] leftAuxVictors = new GRTVictor[6];
 //        GRTVictor[] rightAuxVictors = new GRTVictor[6];
@@ -138,7 +155,7 @@ public class MainRobot extends GRTRobot {
          * DRIVETRAIN INITIALIZATION
          */
         
-        /*
+        
         
         GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2, "dt");
         
@@ -146,19 +163,19 @@ public class MainRobot extends GRTRobot {
         
         dt.addDataLogger(new RPCLogger(rpcConn));
         robotBase = new GRTRobotBase(dt, batterySensor, encoder1, encoder2);
-        driverStation = new GRTAttack3DriverStation(primary, secondary, DRIVER_PROFILE_KEYS, DRIVER_PROFILES,
-                4, 5, 6, "driverStation");
+        driverStation = new GRTAttack3RobotDriver(primary, secondary, DRIVER_PROFILE_KEYS, DRIVER_PROFILES,
+                GRTAttack3Joystick.KEY_BUTTON_4, GRTAttack3Joystick.KEY_BUTTON_5, GRTAttack3Joystick.KEY_BUTTON_6, "driverStation");
         driverStation.enable();
 
         
-        */
+        
         System.out.println("Drivetrain initialized");
         
        
         /**********************************************
          * CONTROLLER INITIALIZATION
          */
-//        driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
+        driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
 //        TestController test = new TestController(leftAuxVictors, rightAuxVictors, primary, secondary);
         
         System.out.println("Controllers Initialized");
@@ -180,25 +197,21 @@ public class MainRobot extends GRTRobot {
         /******************************************
          * MECHANISM INTIALIZATION
          */
-//        Turret turr = new Turret(leftDT1, leftDT2, rightDT1, rightDT2, encoder1, encoder2, primary);
-//        turr.start();
-//        turr.enable();
-//        turr.startListening();
         
-        GRTSwitch up = new GRTSwitch(10, 20, "Upper");
-        GRTSwitch down = new GRTSwitch(11, 20, "Lower");
         
-        up.start();
-        down.start();
-        up.enable();
-        down.enable();
+        GRTSwitch rotationLeftSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
+        GRTSwitch rotationRightSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
+        GRTSwitch visorBottomSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
+        GRTSwitch visorUpperSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
         
-        Wedge wedge = new Wedge(leftDT1, up, down, "Wedge");
+//        Wedge wedge = new Wedge(wedgeVictor, up, down, "Wedge");
+//        wedge.start();wedge.enable();
+//        WedgeAttack3Controller wedgeControl = new WedgeAttack3Controller(primary, wedge);
         
-        wedge.start();wedge.enable();
         
-        WedgeAttack3Controller wedgeControl = new WedgeAttack3Controller(primary, wedge);
+        Turret turr = new Turret(rotationVictor, visorVictor, null, null, rotationLeftSwitch, rotationRightSwitch, visorUpperSwitch, visorBottomSwitch);
         
+        TurretController turrControl = new TurretController(turr, tertiary);
         
         System.out.println("Mechanisms initialized");
       
@@ -208,7 +221,8 @@ public class MainRobot extends GRTRobot {
          * ADD OUR TELEOP AND AUTONOMOUS CONTROLLERS,
          * AND LET'S GO!
          */
-        addTeleopController(wedgeControl);
+        addTeleopController(driveControl);
+        addTeleopController(turrControl);
 //        addAutonomousController(balancer);
         System.out.println("All systems go!");
     }

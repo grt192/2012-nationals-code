@@ -26,11 +26,11 @@ public class BallFeeder extends GRTLoggedProcess implements SwitchListener{
     }
 
     public void pickUpBall(){
-        pickupMotor.setSpeed(1);
+        pickupMotor.setSpeed(1.0);
     }
     
     public void stopPickUp(){
-        pickupMotor.setSpeed(0);
+        pickupMotor.setSpeed(0.0);
     }
     
     public void switchStateChanged(SwitchEvent e) {

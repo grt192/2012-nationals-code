@@ -9,6 +9,7 @@ package deploy;
 import core.EventController;
 import edu.wpi.first.wpilibj.SimpleRobot;
 import java.util.Vector;
+import logger.RPCLogger;
 
 /**
  *
@@ -24,11 +25,11 @@ public abstract class GRTRobot extends SimpleRobot {
 
     private Vector autoControllers;
     private Vector teleopControllers;
-
+    
     public GRTRobot() {
         autoControllers = new Vector();
         teleopControllers = new Vector();
-
+        
     }
 
     /**
