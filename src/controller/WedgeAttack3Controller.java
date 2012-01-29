@@ -13,11 +13,14 @@ import mechanism.Wedge;
 import sensor.GRTAttack3Joystick;
 
 /**
- *
+ * 
+ * An Event Controller that raises and lowers the bridge-lowering mechanism,
+ *  and stops when a limit switch has been tripped.
+ * 
  * @author dan
  */
 public class WedgeAttack3Controller extends EventController implements 
-        ButtonListener, Attack3JoystickListener{
+        ButtonListener {
     private final Wedge wedge;
     private final GRTAttack3Joystick stick;
     public WedgeAttack3Controller(GRTAttack3Joystick stick, Wedge wedge){
@@ -26,16 +29,30 @@ public class WedgeAttack3Controller extends EventController implements
         this.wedge = wedge;
     }
 
+    /**
+     * Start listening to joystick input, and 
+     * have the wedge start listening for limit switch
+     */
     protected void startListening() {
         stick.addButtonListener(this);
-        stick.addJoystickListener(this);
+        wedge.startListening();
     }
 
+    /**
+     * Stop listening to limit switches and
+     * joystick buttons.
+     */
     protected void stopListening() {
-        stick.removeButtonListener(this);
-        stick.removeJoystickListener(this);
+        stick.removeButtonListener(this);        
+        wedge.stopListening();
     }
 
+    /**
+     * Respond to button presses.
+     * Button 2 starts lowering the wedge,
+     * button 3 raises the wedge up again.
+     * @param e 
+     */
     public void buttonPressed(ButtonEvent e) {
         if (e.getSource() == stick){
             switch (e.getButtonID()){
@@ -49,17 +66,13 @@ public class WedgeAttack3Controller extends EventController implements
         }
     }
 
+    /*
+     * Button released: Not used
+     */
     public void buttonReleased(ButtonEvent e) {
+        /*
+         * This isn't the method you're looking for...
+         */
     }
-
-    public void xAxisMoved(Attack3JoystickEvent e) {
-    }
-
-    public void yAxisMoved(Attack3JoystickEvent e) {
-    }
-
-    public void angleChanged(Attack3JoystickEvent e) {
-    }
-    
     
 }

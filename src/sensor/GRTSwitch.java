@@ -35,6 +35,14 @@ public class GRTSwitch extends PollingSensor {
         listeners = new Vector();
     }
     
+    public void addSwitchListener(SwitchListener l){
+        listeners.addElement(l);
+    }
+    
+    public void removeSwitchListener(SwitchListener l){
+        listeners.removeElement(l);
+    }
+    
     public boolean isOn(){
         return in.get();
     }

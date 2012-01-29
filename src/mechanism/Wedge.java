@@ -12,9 +12,9 @@ import sensor.GRTSwitch;
 
 /**
  *
- * @author calvin
+ * @author calvin, gerberduffy
  */
-public class Wedge extends GRTLoggedProcess implements SwitchListener{
+public class Wedge extends GRTLoggedProcess implements SwitchListener {
     private IMotor motor;
     private GRTSwitch limitUp;
     private GRTSwitch limitDown;
@@ -30,23 +30,34 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener{
         this.limitUp = limitUp;
     }
 
+    public void startListening(){
+        limitUp.addSwitchListener(this);
+        limitDown.addSwitchListener(this);
+    }
+    
+    public void stopListening(){
+        limitUp.removeSwitchListener(this);
+        limitDown.removeSwitchListener(this);
+    }
+    
     public void switchStateChanged(SwitchEvent e) {
         if((e.getSource() == limitUp) && (targetState == UP)){
             if(e.getState() == GRTSwitch.PRESSED)
-                motor.setSpeed(0);
+                stopWedge();
             else if(e.getState() == GRTSwitch.RELEASED)
-                motor.setSpeed(1);
+                raiseWedge();
         }
         
         else if((e.getSource() == limitDown) && (targetState == DOWN)){
             if(e.getState() == GRTSwitch.PRESSED)
-                motor.setSpeed(0);
+                stopWedge();
             else if(e.getState() == GRTSwitch.RELEASED)
-                raiseWedge();
+                lowerWedge();
         }
     }
     
     public void raiseWedge(){
+        System.out.println("Raising wedge");
         targetState = UP;
         if(limitUp.getState(GRTSwitch.KEY_STATE) == GRTSwitch.RELEASED)
             motor.setSpeed(1);
@@ -58,6 +69,7 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener{
     }
     
     public void lowerWedge(){
+        System.out.println("Lowering wedge");
         targetState = DOWN;
         if(limitDown.getState(GRTSwitch.KEY_STATE) == GRTSwitch.RELEASED)
             motor.setSpeed(-1);
