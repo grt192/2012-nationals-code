@@ -85,14 +85,12 @@ public class MainRobot extends GRTRobot {
         /*********************************************
          * VICTORS USED FOR THE DRIVETRAIN.
          */
-      
         
-        
-      GRTVictor leftDT1 = new GRTVictor(1, 3, "leftDT1");
-      GRTVictor leftDT2 = new GRTVictor(1, 4, "leftDT2");
+      GRTVictor leftDT1 = new GRTVictor(1, 2, "leftDT1");
+      GRTVictor leftDT2 = new GRTVictor(1, 3, "leftDT2");
       
-      GRTVictor rightDT1 = new GRTVictor(2, 3, "rightDT1");
-      GRTVictor rightDT2 = new GRTVictor(2, 4, "rightDT2");
+      GRTVictor rightDT1 = new GRTVictor(1, 8, "rightDT1");
+      GRTVictor rightDT2 = new GRTVictor(1, 9, "rightDT2");
       
       
       leftDT1.start();leftDT1.enable();
@@ -102,11 +100,11 @@ public class MainRobot extends GRTRobot {
 
       
       //Mechanism Victors
-      GRTVictor wedgeVictor = new GRTVictor(1, 5, "Wedge Victor");
+//      GRTVictor wedgeVictor = new GRTVictor(1, 5, "Wedge Victor");
       GRTVictor rotationVictor = new GRTVictor(1, 6, "Turret Rotator Victor");
       GRTVictor visorVictor = new GRTVictor(1, 7, "Visor Tilt Victor");
       
-      wedgeVictor.start(); wedgeVictor.enable();
+//      wedgeVictor.start(); wedgeVictor.enable();
       rotationVictor.start(); rotationVictor.enable();
       visorVictor.start(); visorVictor.enable();
       
@@ -131,16 +129,7 @@ public class MainRobot extends GRTRobot {
          * VICTORS FOR MECHANISMS
          */
        
-        /*
-        GRTVictor wedgeVictor = new GRTVictor(2, 5, "Wedge Victor");
-        GRTVictor collectionVictor = new GRTVictor(2, 6, "Collection Victor");
-        
-        wedgeVictor.start();
-        wedgeVictor.enable();
-        
-        collectionVictor.start();
-        collectionVictor.enable();
-        */
+
         
         System.out.println("Motors initialized");
         
@@ -168,7 +157,7 @@ public class MainRobot extends GRTRobot {
         driverStation.enable();
 
         
-        
+       
         System.out.println("Drivetrain initialized");
         
        

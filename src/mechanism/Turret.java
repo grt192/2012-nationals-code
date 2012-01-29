@@ -102,15 +102,13 @@ public class Turret extends GRTLoggedProcess implements SwitchListener, EncoderL
      */
     public void rotateToAngle(double angle){        
         rotator.setSpeed((angle/9.0) - 1.0);
-        /*
+        
         if (angle < MAX_RELATIVE_ROTATION_ANGLE && angle > rotatorZeroAngle){
             this.desiredRotationAngle = angle;
             
             log("New rotation angle: " + angle);
             
         }
-        * 
-        */
     }
     
     /**
@@ -119,8 +117,8 @@ public class Turret extends GRTLoggedProcess implements SwitchListener, EncoderL
      * @param angle 
      */
     public void shootAtAngle(double angle){
-        visor.setSpeed((angle/90.0) - 1.0);
-        /*
+//        visor.setSpeed((angle/90.0) - 1.0);
+        
         if (angle < MAX_ABSOULTE_VISOR_ANGLE && angle > visorZeroAngle){
             this.desiredVisorAngle = angle;
             
@@ -133,8 +131,6 @@ public class Turret extends GRTLoggedProcess implements SwitchListener, EncoderL
             } 
             
         }
-        *
-        */
     }
     
     /**
