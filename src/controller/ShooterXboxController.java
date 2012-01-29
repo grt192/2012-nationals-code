@@ -80,7 +80,7 @@ public class ShooterXboxController extends EventController implements ButtonList
 	
 	public void buttonPressed(ButtonEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getSource() == xbox && e.getButtonID() == GRTXBoxJoystick.KEY_BUTTON_5){//RB Button
+		if (e.getSource() == xbox && e.getButtonID() == GRTXBoxJoystick.KEY_BUTTON_RB){
 			shooter.shoot();
 		}
 	}

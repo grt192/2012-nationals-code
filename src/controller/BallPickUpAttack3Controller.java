@@ -39,7 +39,7 @@ public class BallPickUpAttack3Controller extends EventController implements
     public void buttonPressed(ButtonEvent e) {
         if (e.getSource() == stick){
             switch (e.getButtonID()){
-                case GRTAttack3Joystick.KEY_BUTTON_1:
+                case GRTAttack3Joystick.KEY_TRIGGER:
                     pick.pickUpBall();
                     break;
                 case GRTAttack3Joystick.KEY_BUTTON_4:

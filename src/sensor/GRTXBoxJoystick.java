@@ -21,16 +21,16 @@ public class GRTXBoxJoystick extends PollingSensor {
     /**
      * Keys of data
      */
-    public static final int KEY_BUTTON_0 = 0;
-    public static final int KEY_BUTTON_1 = 1;
-    public static final int KEY_BUTTON_2 = 2;
-    public static final int KEY_BUTTON_3 = 3;
-    public static final int KEY_BUTTON_4 = 4;
-    public static final int KEY_BUTTON_5 = 5;
-    public static final int KEY_BUTTON_6 = 6;
-    public static final int KEY_BUTTON_7 = 7;
-    public static final int KEY_BUTTON_8 = 8;
-    public static final int KEY_BUTTON_9 = 9;
+    public static final int KEY_BUTTON_A = 0;
+    public static final int KEY_BUTTON_B = 1;
+    public static final int KEY_BUTTON_X = 2;
+    public static final int KEY_BUTTON_Y = 3;
+    public static final int KEY_BUTTON_LB = 4;
+    public static final int KEY_BUTTON_RB = 5;
+    public static final int KEY_BUTTON_BACK = 6;
+    public static final int KEY_BUTTON_START = 7;
+    public static final int KEY_BUTTON_LS = 8;
+    public static final int KEY_BUTTON_RS = 9;
     public static final int KEY_LEFT_X = 10;
     public static final int KEY_LEFT_Y = 11;
     public static final int KEY_RIGHT_X = 12;
@@ -63,7 +63,7 @@ public class GRTXBoxJoystick extends PollingSensor {
     protected void poll() {
         for (int i = 0; i < NUM_OF_BUTTONS; i++) {
             //if we measure true, this indicates pressed state
-            setState(i, joystick.getRawButton(i) ? PRESSED : RELEASED);
+            setState(i, joystick.getRawButton(i+1) ? PRESSED : RELEASED);
         }
         setState(KEY_LEFT_X, joystick.getX());
         setState(KEY_LEFT_Y, joystick.getY());
