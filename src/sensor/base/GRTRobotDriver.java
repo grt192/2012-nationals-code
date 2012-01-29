@@ -11,11 +11,11 @@ import java.util.Vector;
 /**
  * Superclass for all DriverStations.
  *
- * Handles driver profiles.s
+ * Handles driver profiles
  *
  * @author ajc
  */
-public abstract class GRTDriverStation extends Sensor {
+public abstract class GRTRobotDriver extends Sensor {
 
 	/*
 	 * State Keys
@@ -41,7 +41,7 @@ public abstract class GRTDriverStation extends Sensor {
 	 * @param curves
 	 * @param name
 	 */
-	public GRTDriverStation(int[] profileButtons, IDriverProfile[] curves, String name) {
+	public GRTRobotDriver(int[] profileButtons, IDriverProfile[] curves, String name) {
 		super(name);
 		this.profileButtons = profileButtons;
 		this.curves = curves;
@@ -66,7 +66,7 @@ public abstract class GRTDriverStation extends Sensor {
 		profileListeners.removeElement(l);
 	}
 
-	protected void notifyDriveTurn( double degrees) {
+	protected void notifyDriveTurn(double degrees) {
 		DrivingTurnEvent ev = new DrivingTurnEvent(this, degrees);
 		for (int i = 0; i < drivingListeners.size(); i++) {
 			((DrivingListener) drivingListeners.elementAt(i)).driverTurn(ev);

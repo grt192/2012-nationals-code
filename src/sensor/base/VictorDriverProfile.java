@@ -7,7 +7,7 @@ package sensor.base;
 
 /**
  *
- * Driver profile that transaltes joystick values
+ * Driver profile that translates joystick values
  * specifically calibrated for Victors
  * 
  * @author gerberduffy

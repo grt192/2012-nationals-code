@@ -15,7 +15,7 @@ import sensor.GRTXBoxJoystick;
  *
  * @author ajc
  */
-public class GRTXboxDriverStation extends GRTDriverStation implements XboxJoystickListener, ButtonListener {
+public class GRTXboxRobotDriver extends GRTRobotDriver implements XboxJoystickListener, ButtonListener {
 
     private final GRTXBoxJoystick primary;
     private final GRTXBoxJoystick secondary;
@@ -28,7 +28,7 @@ public class GRTXboxDriverStation extends GRTDriverStation implements XboxJoysti
      * @param curves
      * @param name
      */
-    public GRTXboxDriverStation(GRTXBoxJoystick primary, GRTXBoxJoystick secondary,
+    public GRTXboxRobotDriver(GRTXBoxJoystick primary, GRTXBoxJoystick secondary,
             int[] profileButtons, IDriverProfile[] curves, String name) {
         super(profileButtons, curves, name);
         this.primary = primary;

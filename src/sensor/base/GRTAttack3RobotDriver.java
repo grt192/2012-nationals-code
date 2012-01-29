@@ -14,14 +14,14 @@ import sensor.GRTAttack3Joystick;
  * Driver station using 2 Logitech Attack 3 Joysticks
  * @author dan
  */
-public class GRTAttack3DriverStation extends GRTDriverStation implements Attack3JoystickListener, ButtonListener{
+public class GRTAttack3RobotDriver extends GRTRobotDriver implements Attack3JoystickListener, ButtonListener{
     private final GRTAttack3Joystick left;
     private final GRTAttack3Joystick right;
     private final int turn180Button;
     private final int turn90LeftButton;
     private final int turn90RightButton;
     
-    public GRTAttack3DriverStation(GRTAttack3Joystick left, GRTAttack3Joystick right,
+    public GRTAttack3RobotDriver(GRTAttack3Joystick left, GRTAttack3Joystick right,
             int[] profileButtons, IDriverProfile[] curves, int turn180Button, int turn90LeftButton, int turn90RightButton, String name){
         super(profileButtons, curves, name);
         this.left= left;
