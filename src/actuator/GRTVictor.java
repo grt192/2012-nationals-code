@@ -14,13 +14,15 @@ import edu.wpi.first.wpilibj.Victor;
 public class GRTVictor extends Actuator implements IMotor {
 
     Victor victor;
-    
+    int channel;
     /*
      * Creates a new Victor on the default module at the specified module
      */
     public GRTVictor(int channel, String name){
         super(name);
         victor = new Victor(channel);
+        
+        this.channel = channel;
     }
 
     /* Create a new Victor in the slot and channel given
@@ -32,6 +34,9 @@ public class GRTVictor extends Actuator implements IMotor {
     }
 
     public void executeCommand(double command) {
+        if(channel == 3){
+            System.out.println("New command sent:" + command);
+        }
         if (enabled) {
             victor.set(command);
         }
@@ -42,6 +47,9 @@ public class GRTVictor extends Actuator implements IMotor {
      * @param speed the new speed to set
      */
     public void setSpeed(double speed){
+        if(channel == 3){
+            System.out.println("New command sent:" + speed);
+        }
         if(enabled){
             victor.set(speed);
         }

@@ -16,49 +16,43 @@ import java.util.Vector;
  */
 public class GRTSwitch extends PollingSensor {
 
-    public static final double PRESSED = TRUE;
-    public static final double RELEASED = FALSE;
-    
+    public static final double PRESSED = 1.0;
+    public static final double RELEASED = 0.0;
     private DigitalInput in;
-    
     public static final int KEY_STATE = 0;
     public static final int NUM_DATA = 1;
-    
     private Vector listeners;
-    
-    public GRTSwitch(int slot, int polltime, String id){
-        
+
+    public GRTSwitch(int slot, int polltime, String id) {
+
         super(id, polltime, NUM_DATA);
-        
+
         in = new DigitalInput(slot);
-        
+
         listeners = new Vector();
     }
-    
-    public void addSwitchListener(SwitchListener l){
+
+    public void addSwitchListener(SwitchListener l) {
         listeners.addElement(l);
     }
-    
-    public void removeSwitchListener(SwitchListener l){
+
+    public void removeSwitchListener(SwitchListener l) {
         listeners.removeElement(l);
     }
-    
-    public boolean isOn(){
+
+    private boolean isOn() {
         return in.get();
     }
 
     protected void poll() {
-        setState(KEY_STATE, isOn() ? PRESSED : RELEASED);
-        
-        System.out.println(isOn());
+        setState(KEY_STATE, isOn() ? RELEASED : PRESSED);
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {
+        System.out.println(newDatum);
         SwitchEvent e = new SwitchEvent(this, newDatum);
-        for (int i=0; i < listeners.size(); i++){
-            ((SwitchListener)listeners.elementAt(i)).switchStateChanged(e);
+        for (int i = 0; i < listeners.size(); i++) {
+            ((SwitchListener) listeners.elementAt(i)).switchStateChanged(e);
         }
     }
-
-    
 }

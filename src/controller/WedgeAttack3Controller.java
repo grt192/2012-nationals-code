@@ -11,6 +11,8 @@ import event.ButtonEvent;
 import event.ButtonListener;
 import mechanism.Wedge;
 import sensor.GRTAttack3Joystick;
+import sensor.base.GRTAttack3RobotDriver;
+import sensor.base.GRTRobotDriver;
 
 /**
  * 
@@ -23,8 +25,10 @@ public class WedgeAttack3Controller extends EventController implements
         ButtonListener {
     private final Wedge wedge;
     private final GRTAttack3Joystick stick;
+    
     public WedgeAttack3Controller(GRTAttack3Joystick stick, Wedge wedge){
         super("Wedge Controller");
+        
         this.stick = stick;
         this.wedge = wedge;
     }
@@ -43,36 +47,21 @@ public class WedgeAttack3Controller extends EventController implements
      * joystick buttons.
      */
     protected void stopListening() {
-        stick.removeButtonListener(this);        
+        stick.removeButtonListener(this);
         wedge.stopListening();
     }
 
-    /**
-     * Respond to button presses.
-     * Button 2 starts lowering the wedge,
-     * button 3 raises the wedge up again.
-     * @param e 
-     */
     public void buttonPressed(ButtonEvent e) {
-        if (e.getSource() == stick){
-            switch (e.getButtonID()){
-                case GRTAttack3Joystick.KEY_BUTTON_2:
-                    wedge.lowerWedge();
-                    break;
-                case GRTAttack3Joystick.KEY_BUTTON_3:
-                    wedge.raiseWedge();
-                    break;
-            }
+        System.out.println("Button pressed");
+        if (e.getButtonID() == GRTAttack3Joystick.KEY_BUTTON_2){
+            wedge.lowerWedge();
+        }
+        
+        else if (e.getButtonID() == GRTAttack3Joystick.KEY_BUTTON_3){
+            wedge.raiseWedge();
         }
     }
 
-    /*
-     * Button released: Not used
-     */
     public void buttonReleased(ButtonEvent e) {
-        /*
-         * This isn't the method you're looking for...
-         */
     }
-    
 }

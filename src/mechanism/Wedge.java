@@ -41,38 +41,57 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener {
     }
     
     public void switchStateChanged(SwitchEvent e) {
+        //if upper limit switch is tripped and we are going up...
         if((e.getSource() == limitUp) && (targetState == UP)){
-            if(e.getState() == GRTSwitch.PRESSED)
+            
+            //if we are at upper limit whent trying to raise:
+            if(e.getState() == GRTSwitch.PRESSED)       //If the upper switch is pressed, stop raising
                 stopWedge();
-            else if(e.getState() == GRTSwitch.RELEASED)
-                raiseWedge();
         }
         
+        //Otherwise, if we are going down and there is a change in the lower limit switch
         else if((e.getSource() == limitDown) && (targetState == DOWN)){
             if(e.getState() == GRTSwitch.PRESSED)
                 stopWedge();
-            else if(e.getState() == GRTSwitch.RELEASED)
-                lowerWedge();
         }
     }
     
     public void raiseWedge(){
-        System.out.println("Raising wedge");
+        //Set our goal to go up
         targetState = UP;
-        if(limitUp.getState(GRTSwitch.KEY_STATE) == GRTSwitch.RELEASED)
-            motor.setSpeed(1);
+        
+        //If the upper limit has not been reached, keep raising
+        System.out.println("Limit Up State: " + limitUp.getState(GRTSwitch.KEY_STATE));
+        if(limitUp.getState(GRTSwitch.KEY_STATE) != GRTSwitch.PRESSED){
+            
+            System.out.println("Raising wedge");
+
+            motor.setSpeed(1.0);
+        }
+    }
+
+    
+    /**
+     * 
+     */
+    public void lowerWedge(){
+        
+        //We want to go down now
+        targetState = DOWN;
+        
+        System.out.println("Limit Down State: " + limitDown.getState(GRTSwitch.KEY_STATE));
+        //Set motor speed to go down if we have not reached the lower limit
+        if(limitDown.getState(GRTSwitch.KEY_STATE) != GRTSwitch.PRESSED){
+            motor.setSpeed(-1.0);
+            
+            System.out.println("Lowering wedge");
+        }
     }
     
     public void stopWedge(){
         targetState = DISABLED;
-        motor.setSpeed(0);
+        motor.setSpeed(0.0);
     }
-    
-    public void lowerWedge(){
-        System.out.println("Lowering wedge");
-        targetState = DOWN;
-        if(limitDown.getState(GRTSwitch.KEY_STATE) == GRTSwitch.RELEASED)
-            motor.setSpeed(-1);
-    }
+
     
 }

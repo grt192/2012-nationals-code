@@ -11,10 +11,12 @@ import balancer.RobotTiltGyro;
 import balancer.BalanceController;
 import controller.PrimaryDriver;
 import controller.TestController;
+import controller.WedgeAttack3Controller;
 import logger.RPCLogger;
 import mechanism.GRTDriveTrain;
 import mechanism.GRTRobotBase;
 import mechanism.Turret;
+import mechanism.Wedge;
 import rpc.connection.NetworkRPC;
 import rpc.telemetry.SensorLogger;
 import sensor.*;
@@ -22,7 +24,7 @@ import sensor.base.*;
 
 /**
  *
- * @author ajc
+ * Where Execution of Robot Code begins.
  */
 public class MainRobot extends GRTRobot {
 
@@ -76,38 +78,40 @@ public class MainRobot extends GRTRobot {
         
         /*********************************************
          * VICTORS USED FOR THE DRIVETRAIN.
-         */ 
-//        GRTVictor leftDT1 = new GRTVictor(3, "leftDT1");
-//        GRTVictor leftDT2 = new GRTVictor(4, "leftDT2");
-        
-        GRTVictor[] leftAuxVictors = new GRTVictor[8];
-        GRTVictor[] rightAuxVictors = new GRTVictor[8];
+         */
+      
         
         
-        for (int i=0 ; i < 8; i++){
-            leftAuxVictors[i] = new GRTVictor(i + 3, "Next Victor");
-            leftAuxVictors[i].start(); leftAuxVictors[i].enable();
-        }
+      GRTVictor leftDT1 = new GRTVictor(1, 3, "leftDT1");
+      GRTVictor leftDT2 = new GRTVictor(1, 4, "leftDT2");
+      
+      GRTVictor rightDT1 = new GRTVictor(2, 3, "rightDT1");
+      GRTVictor rightDT2 = new GRTVictor(2, 4, "rightDT2");
+      
+      leftDT1.start();leftDT1.enable();
+      leftDT2.start();leftDT2.enable();
+      rightDT1.start();rightDT1.enable();
+      rightDT2.start();rightDT2.enable();
+
+//        
+//        GRTVictor[] leftAuxVictors = new GRTVictor[6];
+//        GRTVictor[] rightAuxVictors = new GRTVictor[6];
         
         
-        for (int i=0 ; i < 8; i++){
-            rightAuxVictors[i] = new GRTVictor(2, i + 3, "Next Victor");
-            rightAuxVictors[i].start(); rightAuxVictors[i].enable();
-        }
+//        for (int i=2 ; i < 8; i++){
+//            leftAuxVictors[i-2] = new GRTVictor(i + 3, "Next Victor");
+//            leftAuxVictors[i-2].start(); leftAuxVictors[i-2].enable();
+//        }
         
         
-        
-//        GRTVictor rightDT1 = new GRTVictor(2, 3, "rightDT1");
-//        GRTVictor rightDT2 = new GRTVictor(2, 4, "rightDT2");
-        
-//        leftDT1.start();leftDT1.enable();
-//        leftDT2.start();leftDT2.enable();
-//        rightDT1.start();rightDT1.enable();
-//        rightDT2.start();rightDT2.enable();
+//        for (int i=2 ; i < 8; i++){
+//            rightAuxVictors[i-2] = new GRTVictor(2, i + 3, "Next Victor");
+//            rightAuxVictors[i-2].start(); rightAuxVictors[i-2].enable();
+//        }
         
         
         /*********************************************
-         * Other victors
+         * VICTORS FOR MECHANISMS
          */
        
         /*
@@ -150,11 +154,12 @@ public class MainRobot extends GRTRobot {
         */
         System.out.println("Drivetrain initialized");
         
+       
         /**********************************************
          * CONTROLLER INITIALIZATION
          */
 //        driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
-        TestController test = new TestController(leftAuxVictors, rightAuxVictors, primary, secondary);
+//        TestController test = new TestController(leftAuxVictors, rightAuxVictors, primary, secondary);
         
         System.out.println("Controllers Initialized");
         
@@ -180,16 +185,30 @@ public class MainRobot extends GRTRobot {
 //        turr.enable();
 //        turr.startListening();
         
-//        GRTSwitch sw = new GRTSwitch(10, 10, "Test Switch");
-//        sw.start(); sw.enable();
+        GRTSwitch up = new GRTSwitch(10, 20, "Upper");
+        GRTSwitch down = new GRTSwitch(11, 20, "Lower");
+        
+        up.start();
+        down.start();
+        up.enable();
+        down.enable();
+        
+        Wedge wedge = new Wedge(leftDT1, up, down, "Wedge");
+        
+        wedge.start();wedge.enable();
+        
+        WedgeAttack3Controller wedgeControl = new WedgeAttack3Controller(primary, wedge);
+        
         
         System.out.println("Mechanisms initialized");
+      
+        
         
         /*********************************************
          * ADD OUR TELEOP AND AUTONOMOUS CONTROLLERS,
          * AND LET'S GO!
          */
-        addTeleopController(test);
+        addTeleopController(wedgeControl);
 //        addAutonomousController(balancer);
         System.out.println("All systems go!");
     }
