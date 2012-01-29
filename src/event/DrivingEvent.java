@@ -4,7 +4,7 @@
  */
 package event;
 
-import sensor.base.GRTDriverStation;
+import sensor.base.GRTRobotDriver;
 
 /**
  *
@@ -14,11 +14,11 @@ public class DrivingEvent {
 
     public static final int SIDE_LEFT = 0;
     public static final int SIDE_RIGHT = 1;
-    private final GRTDriverStation source;
+    private final GRTRobotDriver source;
     private final int sideID;
     private final double value;
 
-    public DrivingEvent(GRTDriverStation source, int sideID, double value) {
+    public DrivingEvent(GRTRobotDriver source, int sideID, double value) {
         this.source = source;
         this.sideID = sideID;
         this.value = value;
@@ -32,7 +32,7 @@ public class DrivingEvent {
         return value;
     }
 	
-    public GRTDriverStation getSource() {
+    public GRTRobotDriver getSource() {
         return source;
     }
 }

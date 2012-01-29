@@ -4,7 +4,7 @@
  */
 package event;
 
-import sensor.base.GRTDriverStation;
+import sensor.base.GRTRobotDriver;
 import sensor.base.IDriverProfile;
 
 /**
@@ -13,10 +13,10 @@ import sensor.base.IDriverProfile;
  */
 public class DrivingProfileEvent {
 
-    private final GRTDriverStation source;
+    private final GRTRobotDriver source;
     private final IDriverProfile profile;
 
-    public DrivingProfileEvent(GRTDriverStation source, IDriverProfile profile) {
+    public DrivingProfileEvent(GRTRobotDriver source, IDriverProfile profile) {
         this.source = source;
         this.profile = profile;
 
@@ -26,7 +26,7 @@ public class DrivingProfileEvent {
         return profile;
     }
 
-    public GRTDriverStation getSource() {
+    public GRTRobotDriver getSource() {
         return source;
     }
 }

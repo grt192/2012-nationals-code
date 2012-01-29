@@ -8,12 +8,12 @@ import core.EventController;
 import edu.wpi.first.wpilibj.DriverStation;
 import event.*;
 import mechanism.GRTDriveTrain;
-import sensor.base.GRTXboxDriverStation;
+import sensor.base.GRTXboxRobotDriver;
 import mechanism.GRTRobotBase;
 import sensor.base.IDriverProfile;
 import sensor.base.LinearDrive;
 import sensor.GRTXBoxJoystick;
-import sensor.base.GRTDriverStation;
+import sensor.base.GRTRobotDriver;
 
 /**
  * Robot base driving.
@@ -25,7 +25,7 @@ import sensor.base.GRTDriverStation;
 public class PrimaryDriver extends EventController implements DrivingListener, DrivingProfileListener {
 
     //sensor
-    private final GRTDriverStation ds;
+    private final GRTRobotDriver ds;
     //actuator
     private final GRTRobotBase dt;
     //drive curve
@@ -34,7 +34,7 @@ public class PrimaryDriver extends EventController implements DrivingListener, D
     private double leftVelocity;
     private double rightVelocity;
 
-    public PrimaryDriver(GRTRobotBase dt, GRTDriverStation ds, IDriverProfile driveProfile, String name) {
+    public PrimaryDriver(GRTRobotBase dt, GRTRobotDriver ds, IDriverProfile driveProfile, String name) {
         super(name);
         this.dt = dt;
         this.ds = ds;

@@ -4,7 +4,7 @@
  */
 package event;
 
-import sensor.base.GRTDriverStation;
+import sensor.base.GRTRobotDriver;
 
 /**
  *
@@ -12,10 +12,10 @@ import sensor.base.GRTDriverStation;
  */
 public class DrivingTurnEvent {
 
-    private final GRTDriverStation source;
+    private final GRTRobotDriver source;
     private final double degree;
 
-    public DrivingTurnEvent(GRTDriverStation source, double degree) {
+    public DrivingTurnEvent(GRTRobotDriver source, double degree) {
         this.source = source;
         this.degree = degree;
     }

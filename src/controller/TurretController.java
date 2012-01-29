@@ -5,26 +5,20 @@
 package controller;
 
 import core.EventController;
-import event.Attack3JoystickEvent;
-import event.Attack3JoystickListener;
-import event.ButtonEvent;
-import event.ButtonListener;
+import event.*;
 import mechanism.Turret;
 import sensor.GRTAttack3Joystick;
 import sensor.GRTEncoder;
+import sensor.GRTXBoxJoystick;
 
 /**
  * Controller for the Turret Mechanism
  * @author gerberduffy
  */
-public class TurretController extends EventController implements Attack3JoystickListener, ButtonListener{
+public class TurretController extends EventController implements XboxJoystickListener, ButtonListener{
 
     private Turret turret;
-    private GRTAttack3Joystick stick;
-    
-    
-    private double P_CONSTANT = -.09;
-    private double D_CONSTANT = .01;
+    private GRTXBoxJoystick stick;
     
     public static final double MOVE_THRESHOLD = .05; //Minimum distance to move the joystick without activating the rotating motor
         
@@ -32,7 +26,7 @@ public class TurretController extends EventController implements Attack3Joystick
     private double previousJoystickYValue;
 
     
-    public TurretController(Turret turr, GRTAttack3Joystick stick){
+    public TurretController(Turret turr, GRTXBoxJoystick stick){
         
         super("Turret Controller");
         
@@ -51,56 +45,58 @@ public class TurretController extends EventController implements Attack3Joystick
         stick.removeJoystickListener(this);
         stick.removeButtonListener(this);
     }
-            
-            
-    /*
-     * When the x axis of the controller is moved, swivel to the corresponding degree
+
+    /**
+     * Left X-axis movement is mapped to turret swiveling.
+     * @param e 
      */
-    public void xAxisMoved(Attack3JoystickEvent e) {
-        log("x axis move:" + e.getValue());
-        
-        //rotator.setSpeed(e.getValue());
+    public void leftXAxisMoved(XboxJoystickEvent e) {
         
         
+        //If we are within the required joystick movement threshold
         if(Math.abs(e.getValue() - previousJoystickXValue) >= MOVE_THRESHOLD){
-            turret.rotateToAngle(90.0*(e.getValue()+1));
+            turret.rotateToAngle(90.0*(e.getValue()+1));    //e.getValue goes from [-1.0,1.0]. So +1 and *90 gives [0,180]
+
             
             previousJoystickXValue = e.getValue();
         }
-        
     }
-    
-    
-    public void yAxisMoved(Attack3JoystickEvent e) {
+
+    /**
+     * Left Y-axis movement is mapped to changing the visor angle.
+     * @param e 
+     */
+    public void leftYAxisMoved(XboxJoystickEvent e) {
         log("Y axis move:" + e.getValue());
         
-        //visor.setSpeed(e.getValue());
-        
         if(Math.abs(e.getValue() - previousJoystickYValue) >= MOVE_THRESHOLD){
-            turret.setVisorAngle(90.0*(e.getValue()+1));
+            turret.shootAtAngle(90.0*(e.getValue()+1));
             
             System.out.println("y test pass");
             previousJoystickYValue = e.getValue();
         }
     }
 
-    public void angleChanged(Attack3JoystickEvent e) {
-        //This isn't the method you're looking for.
-        //You can go about your business.
-        //Move along, move along...
+    public void leftAngleChanged(XboxJoystickEvent e) {
+    }
+
+    public void rightXAxisMoved(XboxJoystickEvent e) {
+    }
+
+    public void rightYAxisMoved(XboxJoystickEvent e) {
+    }
+
+    public void padMoved(XboxJoystickEvent e) {
+    }
+
+    public void triggerMoved(XboxJoystickEvent e) {
     }
 
     public void buttonPressed(ButtonEvent e) {
-        if (e.getButtonID() == GRTAttack3Joystick.KEY_BUTTON_4){
-            P_CONSTANT-= .01;
-        } else if (e.getButtonID() == GRTAttack3Joystick.KEY_BUTTON_5){
-            P_CONSTANT += .01;
-        }
-        System.out.println("P_CONSTANT NOW " + P_CONSTANT);
-//        System.out.println("Encoder angles:\tRotator->" + rotationEncoder.getState(GRTEncoder.KEY_DEGREES) + "\tVisor->" + visorEncoder.getState(GRTEncoder.KEY_DEGREES));
     }
 
     public void buttonReleased(ButtonEvent e) {
     }
+
     
 }
