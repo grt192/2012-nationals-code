@@ -51,15 +51,16 @@ public class TurretController extends EventController implements XboxJoystickLis
      * @param e 
      */
     public void leftXAxisMoved(XboxJoystickEvent e) {
+        System.out.println("pan at speed:" + e.getValue());
+        turret.panAtSpeed(e.getValue());
         
-        
-        //If we are within the required joystick movement threshold
-        if(Math.abs(e.getValue() - previousJoystickXValue) >= MOVE_THRESHOLD){
-            turret.rotateToAngle(90.0*(e.getValue()+1));    //e.getValue goes from [-1.0,1.0]. So +1 and *90 gives [0,180]
-
-            
-            previousJoystickXValue = e.getValue();
-        }
+//        //If we are within the required joystick movement threshold
+//        if(Math.abs(e.getValue() - previousJoystickXValue) >= MOVE_THRESHOLD){
+//            turret.rotateToAngle(90.0*(e.getValue()+1));    //e.getValue goes from [-1.0,1.0]. So +1 and *90 gives [0,180]
+//
+//
+//            previousJoystickXValue = e.getValue();
+//        }
     }
 
     /**
@@ -67,14 +68,16 @@ public class TurretController extends EventController implements XboxJoystickLis
      * @param e 
      */
     public void leftYAxisMoved(XboxJoystickEvent e) {
-        log("Y axis move:" + e.getValue());
-        
-        if(Math.abs(e.getValue() - previousJoystickYValue) >= MOVE_THRESHOLD){
-            turret.shootAtAngle(90.0*(e.getValue()+1));
-            
-            System.out.println("y test pass");
-            previousJoystickYValue = e.getValue();
-        }
+        System.out.println("tilt at speed:" + e.getValue());
+        turret.tiltAtSpeed(e.getValue());
+//        log("Y axis move:" + e.getValue());
+//
+//        if(Math.abs(e.getValue() - previousJoystickYValue) >= MOVE_THRESHOLD){
+//            turret.shootAtAngle(90.0*(e.getValue()+1));
+//
+//            System.out.println("y test pass");
+//            previousJoystickYValue = e.getValue();
+//        }
     }
 
     public void leftAngleChanged(XboxJoystickEvent e) {
@@ -84,6 +87,8 @@ public class TurretController extends EventController implements XboxJoystickLis
     }
 
     public void rightYAxisMoved(XboxJoystickEvent e) {
+        System.out.println("flywheel at speed:" + e.getValue());
+        turret.shootAtSpeed(e.getValue());
     }
 
     public void padMoved(XboxJoystickEvent e) {
