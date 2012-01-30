@@ -41,7 +41,7 @@ public class GRTBGSystemsFXJoystick extends PollingSensor{
     public static final int KEY_FORCE_X = 18;
     public static final int KEY_FORCE_Y = 19;
     private final static int NUM_OF_BUTTONS=14;
-    private final static int NUM_DATA=13;
+    private final static int NUM_DATA=20;
     public static final double PRESSED = TRUE;
     public static final double RELEASED = FALSE;
 
