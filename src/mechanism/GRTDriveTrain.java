@@ -43,10 +43,10 @@ public class GRTDriveTrain extends GRTLoggedProcess {
     public void tankDrive(double leftVelocity, double rightVelocity) {
 //        System.out.println("left:" + (-leftVelocity) + "\tright:" + -rightVelocity);
         leftFront.setSpeed(-leftVelocity);
-        leftBack.setSpeed(-leftVelocity);
+        leftBack.setSpeed(leftVelocity);
         log(100, leftVelocity);
         rightFront.setSpeed(-rightVelocity);
-        rightBack.setSpeed(-rightVelocity);
+        rightBack.setSpeed(rightVelocity);
         log(101, rightVelocity);
     }
 }
