@@ -36,17 +36,12 @@ public class MainRobot extends GRTRobot {
      */
     public static final int[] DRIVER_PROFILE_KEYS = new int[]{1, 2};
     public static final IDriverProfile[] DRIVER_PROFILES = new IDriverProfile[]{new LinearDrive(), new SquareDrive()};
-    //Global Controllers
-//    private SensorLogger batteryLogger;
-    //Teleop Controllers
+    private static final int LEFT_SIDECAR_MODULE = 1;
+    private static final int RIGHT_SIDECAR_MODULE = 2;
     private PrimaryDriver driveControl;
     private GRTRobotDriver driverStation;
     private GRTRobotBase robotBase;
-//    private GRTADXL345 adxl;
-//    private final ADXL345DigitalAccelerometer primaryADXL;
-//    private final RobotTiltGyro tiltSensor;
-//    private final SensorLogger tiltLogger;
-//    private BalanceController balancer;
+
 
     public MainRobot() {
 
@@ -61,112 +56,104 @@ public class MainRobot extends GRTRobot {
         
         GRTXBoxJoystick tertiary = new GRTXBoxJoystick(3, 12, "Xbox Joystick");
         
-        primary.start();
-        secondary.start();
-        primary.enable();
-        secondary.enable();
-        tertiary.start();
-        tertiary.enable();
+        primary.start();    secondary.start();
+        primary.enable();   secondary.enable();
+        tertiary.start();   tertiary.enable();
         System.out.println("Joysticks initialized");
 
         //Battery Sensor
         GRTBatterySensor batterySensor = new GRTBatterySensor(10, "battery");
-        batterySensor.start();
-        batterySensor.enable();
+        batterySensor.start();  batterySensor.enable();
 
         GRTEncoder encoder1 = new GRTEncoder(2, 1, 4.0, 10, "EncoderLeft");
         GRTEncoder encoder2 = new GRTEncoder(3, 4, 4.0, 10, "EncoderRight");
-        encoder1.start();
-        encoder1.enable();
-        encoder2.start();
-        encoder2.enable();
+        encoder1.start();   encoder1.enable();
+        encoder2.start();   encoder2.enable();
         
         
         /*********************************************
          * VICTORS USED FOR THE DRIVETRAIN.
          */
         
-      GRTVictor leftDT1 = new GRTVictor(1, 2, "leftDT1");
-      GRTVictor leftDT2 = new GRTVictor(1, 3, "leftDT2");
+      GRTVictor leftDT1 = new GRTVictor(LEFT_SIDECAR_MODULE, 9, "leftDT1");
+      GRTVictor leftDT2 = new GRTVictor(LEFT_SIDECAR_MODULE ,10, "leftDT2");
+      GRTVictor rightDT1 = new GRTVictor(RIGHT_SIDECAR_MODULE, 9, "rightDT1");
+      GRTVictor rightDT2 = new GRTVictor(RIGHT_SIDECAR_MODULE, 10, "rightDT2");
       
-      GRTVictor rightDT1 = new GRTVictor(1, 8, "rightDT1");
-      GRTVictor rightDT2 = new GRTVictor(1, 9, "rightDT2");
       
+      leftDT1.start();	leftDT1.enable();
+      leftDT2.start();	leftDT2.enable();
+      rightDT1.start();	rightDT1.enable();
+      rightDT2.start();	rightDT2.enable();
       
-      leftDT1.start();leftDT1.enable();
-      leftDT2.start();leftDT2.enable();
-      rightDT1.start();rightDT1.enable();
-      rightDT2.start();rightDT2.enable();
-
-      
-      //Mechanism Victors
-//      GRTVictor wedgeVictor = new GRTVictor(1, 5, "Wedge Victor");
-      GRTVictor rotationVictor = new GRTVictor(1, 6, "Turret Rotator Victor");
-      GRTVictor visorVictor = new GRTVictor(1, 7, "Visor Tilt Victor");
-      
-//      wedgeVictor.start(); wedgeVictor.enable();
-      rotationVictor.start(); rotationVictor.enable();
-      visorVictor.start(); visorVictor.enable();
-      
-//        
-//        GRTVictor[] leftAuxVictors = new GRTVictor[6];
-//        GRTVictor[] rightAuxVictors = new GRTVictor[6];
-        
-        
-//        for (int i=2 ; i < 8; i++){
-//            leftAuxVictors[i-2] = new GRTVictor(i + 3, "Next Victor");
-//            leftAuxVictors[i-2].start(); leftAuxVictors[i-2].enable();
-//        }
-        
-        
-//        for (int i=2 ; i < 8; i++){
-//            rightAuxVictors[i-2] = new GRTVictor(2, i + 3, "Next Victor");
-//            rightAuxVictors[i-2].start(); rightAuxVictors[i-2].enable();
-//        }
-        
-        
-        /*********************************************
+      /*********************************************
          * VICTORS FOR MECHANISMS
          */
-       
+      
+      //Mechanism Victors
+      GRTVictor wedgeVictor = new GRTVictor(LEFT_SIDECAR_MODULE, 4, "Wedge Victor");
+      GRTVictor rotationVictor = new GRTVictor(RIGHT_SIDECAR_MODULE, 3, "Turret Rotator Victor");
+      GRTVictor visorVictor = new GRTVictor(RIGHT_SIDECAR_MODULE, 4, "Visor Tilt Victor");
+      GRTVictor flywheelVictor1 = new GRTVictor(RIGHT_SIDECAR_MODULE, 7, "flywheel1");
+      GRTVictor flywheelVictor2 = new GRTVictor(RIGHT_SIDECAR_MODULE, 8, "flywheel2");
+      GRTVictor drawbridgeVictor = new GRTVictor(RIGHT_SIDECAR_MODULE, 5, "drawbridge");
+      GRTVictor flailVictor1 = new GRTVictor(LEFT_SIDECAR_MODULE, 7, "flail1");
+      GRTVictor flailVictor2 = new GRTVictor(LEFT_SIDECAR_MODULE, 8, "flail2");
+      GRTVictor transVictor1 = new GRTVictor(LEFT_SIDECAR_MODULE, 5, "trans1");
+      GRTVictor transVictor2 = new GRTVictor(LEFT_SIDECAR_MODULE, 6, "trans2");
+      
+      
+      
+      wedgeVictor.start(); 		wedgeVictor.enable();
+      rotationVictor.start(); 		rotationVictor.enable();
+      visorVictor.start(); 		visorVictor.enable();
+      flywheelVictor1.start(); 		flywheelVictor1.enable();  
+      flywheelVictor2.start(); 		flywheelVictor2.enable();  
+      drawbridgeVictor.start();		drawbridgeVictor.enable(); 
+      flailVictor1.start();		flailVictor1.enable(); 
+      flailVictor2.start();		flailVictor2.enable(); 
+      transVictor1.start();		transVictor1.enable(); 
+      transVictor2.start();		transVictor2.enable(); 
 
+
+       System.out.println("Motors initialized");
+       
+         /*********************************************
+         * SWITCHES FOR MECHANISMS
+         */
+      
         
-        System.out.println("Motors initialized");
-        
-        
-        
-        
-        
-        
-        
-        
+    
         /**********************************************
          * DRIVETRAIN INITIALIZATION
          */
         
+        GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2,"dt");
         
-        
-        GRTDriveTrain dt = new GRTDriveTrain(leftDT1, leftDT2, rightDT1, rightDT2, "dt");
-        
-        dt.start();dt.enable();
+        dt.start();     dt.enable();
         
         dt.addDataLogger(new RPCLogger(rpcConn));
         robotBase = new GRTRobotBase(dt, batterySensor, encoder1, encoder2);
-        driverStation = new GRTAttack3RobotDriver(primary, secondary, DRIVER_PROFILE_KEYS, DRIVER_PROFILES,
-                GRTAttack3Joystick.KEY_BUTTON_4, GRTAttack3Joystick.KEY_BUTTON_5, GRTAttack3Joystick.KEY_BUTTON_6, "driverStation");
+        driverStation = new GRTAttack3RobotDriver(primary, secondary,
+                DRIVER_PROFILE_KEYS, DRIVER_PROFILES, -1,-1,-1, "driverStation");
         driverStation.enable();
-
-        
-       
         System.out.println("Drivetrain initialized");
+            
+        /**********************************************
+         * MECHANISM INITIALIZATION
+         */
+//        Wedge wedge = new Wedge(wedgeVictor, up, down, "Wedge");
+//        wedge.start();wedge.enable();
+//        WedgeAttack3Controller wedgeControl = new WedgeAttack3Controller(primary, wedge);
+        
+        
         
        
         /**********************************************
          * CONTROLLER INITIALIZATION
          */
         driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
-//        TestController test = new TestController(leftAuxVictors, rightAuxVictors, primary, secondary);
-        
+
         System.out.println("Controllers Initialized");
         
         
@@ -175,10 +162,10 @@ public class MainRobot extends GRTRobot {
         /***********************************************
          * LOGGING
          */
-        SensorLogger encoderLogger1 = new SensorLogger(encoder1, rpcConn, new int[]{81, 82, 83}, null);
-        SensorLogger encoderLogger2 = new SensorLogger(encoder2, rpcConn, new int[]{84, 85, 86}, null);
-        encoderLogger1.enable();
-        encoderLogger2.enable();
+//        SensorLogger encoderLogger1 = new SensorLogger(encoder1, rpcConn, new int[]{81, 82, 83}, null);
+//        SensorLogger encoderLogger2 = new SensorLogger(encoder2, rpcConn, new int[]{84, 85, 86}, null);
+//        encoderLogger1.enable();
+//        encoderLogger2.enable();
         
         System.out.println("Loggers initialized");
 
@@ -188,19 +175,19 @@ public class MainRobot extends GRTRobot {
          */
         
         
-        GRTSwitch rotationLeftSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
-        GRTSwitch rotationRightSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
-        GRTSwitch visorBottomSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
-        GRTSwitch visorUpperSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
-        
+//        GRTSwitch rotationLeftSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
+//        GRTSwitch rotationRightSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
+//        GRTSwitch visorBottomSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
+//        GRTSwitch visorUpperSwitch = new GRTSwitch(1, 14, "Rotation Left Switch");
+//        
 //        Wedge wedge = new Wedge(wedgeVictor, up, down, "Wedge");
 //        wedge.start();wedge.enable();
 //        WedgeAttack3Controller wedgeControl = new WedgeAttack3Controller(primary, wedge);
         
         
-        Turret turr = new Turret(rotationVictor, visorVictor, null, null, rotationLeftSwitch, rotationRightSwitch, visorUpperSwitch, visorBottomSwitch);
+//        Turret turr = new Turret(rotationVictor, visorVictor, null, null, rotationLeftSwitch, rotationRightSwitch, visorUpperSwitch, visorBottomSwitch);
         
-        TurretController turrControl = new TurretController(turr, tertiary);
+//        TurretController turrControl = new TurretController(turr, tertiary);
         
         System.out.println("Mechanisms initialized");
       
@@ -211,7 +198,7 @@ public class MainRobot extends GRTRobot {
          * AND LET'S GO!
          */
         addTeleopController(driveControl);
-        addTeleopController(turrControl);
+//        addTeleopController(turrControl);
 //        addAutonomousController(balancer);
         System.out.println("All systems go!");
     }
