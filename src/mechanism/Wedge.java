@@ -28,10 +28,17 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener {
         this.motor = motor;
         this.limitDown = limitDown;
         this.limitUp = limitUp;
-        limitDown.addSwitchListener(this);
-        limitUp.addSwitchListener(this);
     }
 
+    public void startListening(){
+        limitUp.addSwitchListener(this);
+        limitDown.addSwitchListener(this);
+    }
+    
+    public void stopListening(){
+        limitUp.removeSwitchListener(this);
+        limitDown.removeSwitchListener(this);
+    }
     
     public void switchStateChanged(SwitchEvent e) {
         //if upper limit switch is tripped and we are going up...
@@ -63,7 +70,7 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener {
         }
     }
 
-   
+    
     /**
      * 
      */
