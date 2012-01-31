@@ -9,17 +9,12 @@ import balancer.BalanceController;
 import balancer.RobotTiltAccel;
 import balancer.RobotTiltGyro;
 import balancer.BalanceController;
+import controller.BetabotController;
 import controller.MotorsTesterController;
 import controller.PrimaryDriver;
-import controller.TestController;
-import controller.TurretController;
-import controller.WedgeAttack3Controller;
+
 import logger.RPCLogger;
-import mechanism.GRTDriveTrain;
-import mechanism.GRTRobotBase;
-import mechanism.Shooter;
-import mechanism.Turret;
-import mechanism.Wedge;
+import mechanism.*;
 import rpc.connection.NetworkRPC;
 import rpc.telemetry.SensorLogger;
 import sensor.*;
@@ -92,7 +87,7 @@ public class MainRobot extends GRTRobot {
         //Driver station components
         GRTAttack3Joystick primary = new GRTAttack3Joystick(1, 12, "primary");
         GRTAttack3Joystick secondary = new GRTAttack3Joystick(2, 12, "secondary");
-        GRTXBoxJoystick tertiary = new GRTXBoxJoystick(3, 12, "Xbox Joystick");
+        GRTBGSystemsFXJoystick tertiary = new GRTBGSystemsFXJoystick(3, 12, "Xbox Joystick");
 
         primary.start();    secondary.start();
         primary.enable();   secondary.enable();
@@ -216,17 +211,16 @@ public class MainRobot extends GRTRobot {
         GRTSwitch rotationRightSwitch = new GRTSwitch(8, 14, "Rotation Left Switch");
         GRTSwitch visorBottomSwitch = new GRTSwitch(9, 14, "Rotation Left Switch");
         GRTSwitch visorUpperSwitch = new GRTSwitch(10, 14, "Rotation Left Switch");
-//
-//        Wedge wedge = new Wedge(wedgeVictor, up, down, "Wedge");
-//        wedge.start();wedge.enable();
-//        WedgeAttack3Controller wedgeControl = new WedgeAttack3Controller(primary, wedge);
+
+        Wedge wedge = new Wedge(wedgeVictor, null, null, "Wedge");
+        wedge.start();wedge.enable();
+        Drawbridge drawbridge = new Drawbridge(drawbridgeVictor, null, null, "DrawBridge");
+        drawbridge.start(); drawbridge.enable();
         
-        Shooter s = new Shooter(flywheelVictor1, flywheelVictor2, null, null, transVictor1, transVictor2);
-
-
-        Turret turr = new Turret(s, rotationVictor, visorVictor, null, null, rotationLeftSwitch, rotationRightSwitch, visorUpperSwitch, visorBottomSwitch);
-
-        TurretController turrControl = new TurretController(turr, tertiary);
+        ShootingSystem ss = new ShootingSystem(rotationVictor, visorVictor, flywheelVictor1, flywheelVictor2, flailVictor1, flailVictor2, transVictor1, transVictor2);
+        BetabotController bc = new BetabotController(tertiary, ss, wedge, drawbridge);
+        bc.start(); bc.enable();
+        
 
         System.out.println("Mechanisms initialized");
 
@@ -237,7 +231,7 @@ public class MainRobot extends GRTRobot {
          * AND LET'S GO!
          */
         addTeleopController(driveControl);
-        addTeleopController(turrControl);
+        addTeleopController(bc);
 //        addAutonomousController(balancer);
         System.out.println("All systems go!");
     }

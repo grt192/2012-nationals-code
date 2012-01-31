@@ -27,11 +27,26 @@ public class Drawbridge  extends GRTLoggedProcess implements SwitchListener{
         super(name);
         this.motor = motor;
         this.limitDown = limitDown;
-        this.limitUp = limitUp;
+        this.limitUp = limitUp;        
+    }
+
+    public void startListening(){
         limitDown.addSwitchListener(this);
         limitUp.addSwitchListener(this);
     }
-
+    
+    public void stopListening(){
+        limitDown.removeSwitchListener(this);
+        limitUp.removeSwitchListener(this);
+    }
+    
+    /**
+     * Dumb method to set speed directly
+     * @param speed 
+     */
+    public void setDrawbridgeSpeed(double speed){
+        motor.setSpeed(speed);
+    }
     
     public void switchStateChanged(SwitchEvent e) {
         //if upper limit switch is tripped and we are going up...

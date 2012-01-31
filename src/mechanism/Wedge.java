@@ -40,6 +40,14 @@ public class Wedge extends GRTLoggedProcess implements SwitchListener {
         limitDown.removeSwitchListener(this);
     }
     
+    /**
+     * Dumb method to set speed of wedge motor
+     * @param speed 
+     */
+    public void setWedgeSpeed(double speed){
+        motor.setSpeed(speed);
+    }
+    
     public void switchStateChanged(SwitchEvent e) {
         //if upper limit switch is tripped and we are going up...
         if((e.getSource() == limitUp) && (targetState == UP)){
