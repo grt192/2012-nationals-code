@@ -218,7 +218,7 @@ public class MainRobot extends GRTRobot {
         drawbridge.start(); drawbridge.enable();
         
         ShootingSystem ss = new ShootingSystem(rotationVictor, visorVictor, flywheelVictor1, flywheelVictor2, flailVictor1, flailVictor2, transVictor1, transVictor2);
-        BetabotController bc = new BetabotController(tertiary, ss, wedge, drawbridge);
+        BetabotController bc = new BetabotController(tertiary, primary, secondary, ss, wedge, drawbridge);
         bc.start(); bc.enable();
         
 
