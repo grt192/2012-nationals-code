@@ -30,18 +30,17 @@ public class GRTEncoder extends PollingSensor {
         rotaryEncoder = new Encoder(channelA, channelB);
         rotaryEncoder.start();
         
-        rotaryEncoder.setDistancePerPulse(distancePerPulse);
-        
         distancePerPulse = pulseDistance;
         listeners = new Vector();
     }
 
     protected void poll() {
-        setState(KEY_DISTANCE, rotaryEncoder.getDistance());
-        setState(KEY_DEGREES, rotaryEncoder.getDistance() / distancePerPulse);
+        setState(KEY_DISTANCE, rotaryEncoder.getDistance() * Math.PI * distancePerPulse / 360.0);
+        setState(KEY_DEGREES, rotaryEncoder.getDistance());
         setState(KEY_DIRECTION, rotaryEncoder.getDirection() ? TRUE : FALSE);
         
-//        System.out.println(toString() + " Count: " + rotaryEncoder.get());
+        System.out.println("Degrees: " + getState(KEY_DEGREES));
+        System.out.println("Dist : " + getState(KEY_DISTANCE));
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {
