@@ -85,8 +85,8 @@ public class NetworkRPC implements RPCConnection, SocketListener {
         return Integer.parseInt(line.substring(3, line.indexOf(':')));
     }
 
-    private static double getData(String line) {
-        return Double.parseDouble((line.substring(line.indexOf(':') + 1)));
+    private static String getData(String line) {
+        return line.substring(line.indexOf(':') + 1);
     }
 
     public void onConnect(SocketEvent e) { //TODO

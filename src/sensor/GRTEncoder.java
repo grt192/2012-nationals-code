@@ -38,9 +38,6 @@ public class GRTEncoder extends PollingSensor {
         setState(KEY_DISTANCE, rotaryEncoder.getDistance() * Math.PI * distancePerPulse / 360.0);
         setState(KEY_DEGREES, rotaryEncoder.getDistance());
         setState(KEY_DIRECTION, rotaryEncoder.getDirection() ? TRUE : FALSE);
-        
-        System.out.println("Degrees: " + getState(KEY_DEGREES));
-        System.out.println("Dist : " + getState(KEY_DISTANCE));
     }
 
     protected void notifyListeners(int id, double oldDatum, double newDatum) {
