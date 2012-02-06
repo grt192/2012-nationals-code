@@ -62,13 +62,22 @@ public class MainRobot extends GRTRobot {
         batterySensor.start();
         batterySensor.enable();
 
-        GRTEncoder encoder1 = new GRTEncoder(2, 1, 4.0, 10, "EncoderLeft");
-        GRTEncoder encoder2 = new GRTEncoder(3, 4, 4.0, 10, "EncoderRight");
-        encoder1.start();
-        encoder1.enable();
-        encoder2.start();
-        encoder2.enable();
-
+        //DriveTrain Encoders
+        GRTEncoder dtEncoderLeft = new GRTEncoder(2, 1, 4.0, 10, "EncoderLeft");
+        GRTEncoder dtEncoderRight = new GRTEncoder(3, 4, 4.0, 10, "EncoderRight");
+        dtEncoderLeft.start();
+        dtEncoderLeft.enable();
+        dtEncoderRight.start();
+        dtEncoderRight.enable();
+        
+        //Mechanism Encoders
+        GRTEncoder turretRotationEncoder = new GRTEncoder(5,6,4.0,10,"RotationEncoder");
+        GRTEncoder turretVisorEncoder = new GRTEncoder(7,8,4.0,10,"Visor Encoder");
+        turretRotationEncoder.start();
+        turretRotationEncoder.enable();
+        turretVisorEncoder.start();
+        turretVisorEncoder.enable();
+        
 
         /**
          * *******************************************
@@ -160,7 +169,7 @@ public class MainRobot extends GRTRobot {
         dt.enable();
 
 //        dt.addDataLogger(new RPCLogger(rpcConn));
-        robotBase = new GRTRobotBase(dt, batterySensor, encoder1, encoder2);
+        robotBase = new GRTRobotBase(dt, batterySensor, dtEncoderLeft, dtEncoderRight);
         driverStation = new GRTAttack3RobotDriver(primary, secondary,
                 DRIVER_PROFILE_KEYS, DRIVER_PROFILES, -1, -1, -1, "driverStation");
         driverStation.enable();
@@ -185,8 +194,8 @@ public class MainRobot extends GRTRobot {
          * *********************************************
          * LOGGING
          */
-        SensorLogger encoderLogger1 = new SensorLogger(encoder1, rpcConn, new int[]{10, 11, 12}, null);
-        SensorLogger encoderLogger2 = new SensorLogger(encoder2, rpcConn, new int[]{13, 14, 15}, null);
+        SensorLogger encoderLogger1 = new SensorLogger(dtEncoderLeft, rpcConn, new int[]{10, 11, 12}, null);
+        SensorLogger encoderLogger2 = new SensorLogger(dtEncoderRight, rpcConn, new int[]{13, 14, 15}, null);
         encoderLogger1.start();
         encoderLogger1.enable();
         encoderLogger2.start();
@@ -216,7 +225,9 @@ public class MainRobot extends GRTRobot {
                 flywheelVictor1, flywheelVictor2,
                 flailVictor1,
                 topTransVictor1, topTransVictor2,
-                botTransVictor1, botTransVictor2);
+                botTransVictor1, botTransVictor2, 
+                turretRotationEncoder, turretVisorEncoder);
+        ss.enable();
         BetabotController bc = new BetabotController(tertiary, primary, secondary, ss, wedge, drawbridge);
         bc.start();
         bc.enable();
