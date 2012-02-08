@@ -177,15 +177,11 @@ public class MainRobot extends GRTRobot {
 
         /**
          * ********************************************
-         * MECHANISM INITIALIZATION
-         */
-        /**
-         * ********************************************
          * CONTROLLER INITIALIZATION
          */
         driveControl = new PrimaryDriver(robotBase, driverStation, new LinearDrive(), "driveControl");
 
-        System.out.println("Controllers Initialized");
+        System.out.println("Controllers initialized");
 
 
 
@@ -228,9 +224,14 @@ public class MainRobot extends GRTRobot {
                 botTransVictor1, botTransVictor2, 
                 turretRotationEncoder, turretVisorEncoder);
         ss.enable();
-        BetabotController bc = new BetabotController(tertiary, primary, secondary, ss, wedge, drawbridge);
+        ss.enableRotation();
+        ss.enableVisor();
+        
+        MechTester tester = new MechTester(tertiary, dt, wedge, drawbridge, ss, "Mechanism Tester");
+        
+        BetabotController bc = new BetabotController(tertiary, primary, secondary, ss, wedge, drawbridge, tester);
         bc.start();
-        bc.enable();
+        bc.enable();        
 //        ShootingDistanceTestController distTest = new ShootingDistanceTestController(primary, ss);
 
 
