@@ -5,8 +5,10 @@
 package mechanism;
 
 import core.Sensor;
+import event.BallTrackingListener;
 import event.SwitchEvent;
 import event.SwitchListener;
+import java.util.Vector;
 import sensor.GRTSwitch;
 
 /**
@@ -33,6 +35,9 @@ public class BallTracker implements SwitchListener{
     //Tracking numbers
     private int totalBalls = 0;     //Total balls in system. Starts at 0
     
+    //Listeners vector
+    private Vector listeners;
+    
     public BallTracker(GRTSwitch lowerRollers, 
                        GRTSwitch upperRollers,
                        GRTSwitch hopper, 
@@ -43,8 +48,26 @@ public class BallTracker implements SwitchListener{
         this.hopperSwitch = hopper;
         this.upperRollersSwitch = upperRollers;
         this.ballQueueSwitch = ballQueue;
+        
+        this.listeners = new Vector();
     }
 
+    /**
+     * Add a ball listener
+     * @param l 
+     */
+    public void addListener(BallTrackingListener l){
+        listeners.addElement(l);
+    }
+    
+    /**
+     * Remove a ball listener
+     * @param l 
+     */
+    public void removeListener(BallTrackingListener l){
+        listeners.removeElement(l);
+    }
+    
     /**
      * Start listening to the count switches
      * 
