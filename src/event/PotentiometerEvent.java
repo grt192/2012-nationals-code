@@ -4,7 +4,7 @@
  */
 package event;
 
-import sensor.Potentiometer;
+import sensor.GRTPotentiometer;
 
 /**
  *
@@ -12,10 +12,10 @@ import sensor.Potentiometer;
  */
 public class PotentiometerEvent {
     
-    private Potentiometer source;
+    private GRTPotentiometer source;
     private double value;
 
-    public PotentiometerEvent(Potentiometer source, double value) {
+    public PotentiometerEvent(GRTPotentiometer source, double value) {
         this.source = source;
         this.value = value;
     }
@@ -24,7 +24,7 @@ public class PotentiometerEvent {
         return value;
     }
 
-    public Potentiometer getSource() {
+    public GRTPotentiometer getSource() {
         return source;
     }
     

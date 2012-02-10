@@ -16,4 +16,6 @@ public interface EncoderListener {
     
     public void distanceChanged(EncoderEvent e);
     
+    public void rateChanged(EncoderEvent e);
+    
 }

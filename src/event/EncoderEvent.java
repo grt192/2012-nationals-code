@@ -15,15 +15,33 @@ public class EncoderEvent {
     
 	private GRTEncoder source;
     private int id;
-    private double value;
+    private double distance;
+    private double angle;
+    private double direction;
+    private double rate;
 	
-    public EncoderEvent(GRTEncoder source, int id, double value){
+    public EncoderEvent(GRTEncoder source, int id, double distance, double angle, double direction, double rate){
         this.source = source;
-		this.id = id;
-		this.value = value;
+        this.id = id;
+        this.distance = distance;
+        this.direction = direction;
+        this.angle = angle;
+        this.rate = rate;
     }
-	public double getValue() {
-        return value;
+    public double getDistance() {
+        return distance;
+    }
+    
+    public double getDirection() {
+        return direction;
+    }
+    
+    public double getAngle() {
+        return angle;
+    }
+    
+    public double getRate() {
+        return rate;
     }
 
     public int getID() {

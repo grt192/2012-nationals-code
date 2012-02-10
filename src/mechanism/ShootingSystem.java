@@ -141,10 +141,13 @@ public class ShootingSystem implements EncoderListener{
     }
 
     public void degreeChanged(EncoderEvent e) {
-        if (e.getSource() == rotationEncoder) rotationAngle = (rotationAngle + (rotationRatio * e.getValue()));
-        else if (e.getSource() == visorEncoder) visorAngle = (visorAngle + e.getValue());
+        if (e.getSource() == rotationEncoder) rotationAngle = (rotationAngle + (rotationRatio * e.getAngle()));
+        else if (e.getSource() == visorEncoder) visorAngle = (visorAngle + e.getAngle());
     }
 
     public void distanceChanged(EncoderEvent e) {
+    }
+
+    public void rateChanged(EncoderEvent e) {
     }
 }

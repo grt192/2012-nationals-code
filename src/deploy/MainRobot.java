@@ -63,8 +63,8 @@ public class MainRobot extends GRTRobot {
         batterySensor.enable();
 
         //DriveTrain Encoders
-        GRTEncoder dtEncoderLeft = new GRTEncoder(2, 1, 4.0, 10, "EncoderLeft");
-        GRTEncoder dtEncoderRight = new GRTEncoder(3, 4, 4.0, 10, "EncoderRight");
+        GRTEncoder dtEncoderLeft = new GRTEncoder(2, 1, 0.32, 10, "EncoderLeft");
+        GRTEncoder dtEncoderRight = new GRTEncoder(3, 4, 0.32, 10, "EncoderRight");
         dtEncoderLeft.start();
         dtEncoderLeft.enable();
         dtEncoderRight.start();
@@ -194,8 +194,8 @@ public class MainRobot extends GRTRobot {
          * *********************************************
          * LOGGING
          */
-        SensorLogger encoderLogger1 = new SensorLogger(dtEncoderLeft, rpcConn, new int[]{10, 11, 12}, null);
-        SensorLogger encoderLogger2 = new SensorLogger(dtEncoderRight, rpcConn, new int[]{13, 14, 15}, null);
+        SensorLogger encoderLogger1 = new SensorLogger(dtEncoderLeft, rpcConn, new int[]{10, 11, 12, 13}, null);
+        SensorLogger encoderLogger2 = new SensorLogger(dtEncoderRight, rpcConn, new int[]{14, 15, 16, 17}, null);
         encoderLogger1.start();
         encoderLogger1.enable();
         encoderLogger2.start();

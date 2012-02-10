@@ -4,11 +4,12 @@
  */
 package event;
 
-import event.PotentiometerEvent;
 /**
  *
  * @author calvin
  */
-public interface PotentiometerListener {
-    public void valueChanged(PotentiometerEvent e);
+public interface SharpIRListener {
+
+    public void distanceChanged(SharpIREvent e);
+
 }

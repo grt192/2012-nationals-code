@@ -51,6 +51,7 @@ public class GRTRobotBase implements EncoderListener{
 	}
 	
     public void tankDrive(double leftVelocity, double rightVelocity){
+//        System.out.println("Robot base told to drive");
         dt.tankDrive(leftVelocity, rightVelocity);
     }
 	//commands a turn
@@ -78,15 +79,18 @@ public class GRTRobotBase implements EncoderListener{
 	public void degreeChanged(EncoderEvent e) {
 		double ratio = 8.0/45; // ratio between wheel rotation and robot rotation is (wheel diameter) / (2*robot width)
 		if (e.getSource()== leftEncoder) {
-			heading = heading + (e.getValue() - leftEncoderDegrees) / ratio;  
-			leftEncoderDegrees = e.getValue();
+			heading = heading + (e.getAngle() - leftEncoderDegrees) / ratio;  
+			leftEncoderDegrees = e.getAngle();
 		}
 		if (e.getSource() == rightEncoder) {
-			heading = heading - ( e.getValue() - rightEncoderDegrees) / ratio;
-			rightEncoderDegrees = e.getValue();
+			heading = heading - ( e.getAngle() - rightEncoderDegrees) / ratio;
+			rightEncoderDegrees = e.getAngle();
 		}
 	}
 	
 	public void distanceChanged(EncoderEvent e) {
 	}
+
+    public void rateChanged(EncoderEvent e) {
+    }
 }
