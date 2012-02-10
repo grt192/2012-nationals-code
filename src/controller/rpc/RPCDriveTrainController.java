@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.rpc;
 
 import core.EventController;
 import mechanism.GRTDriveTrain;
@@ -17,14 +17,15 @@ import rpc.RPCMessageListener;
  * 
  * @author gerberduffy
  */
-public class RPCController extends EventController implements RPCMessageListener {
+public class RPCDriveTrainController extends EventController implements RPCMessageListener {
 
     private GRTDriveTrain dt;
     private RPCConnection conn;
     private int[] rpcKeys;
     
     public static final int DT_KEY = 0;
-    public static final int NUM_KEYS = 1;
+    public static final int DESIRED_SPEED_KEY = 1;
+    public static final int NUM_KEYS = 2;
     
     /**
      * Constructor. Takes in the RPC Connection, the RPC keys we listen on, and 
@@ -33,7 +34,7 @@ public class RPCController extends EventController implements RPCMessageListener
      * @param rpcKeys An array of RPC keys we care about
      * @param dt The Drive Train we are actuating
      */
-    public RPCController(RPCConnection conn, int[] rpcKeys, GRTDriveTrain dt){
+    public RPCDriveTrainController(RPCConnection conn, int[] rpcKeys, GRTDriveTrain dt){
         super("RPC Controller");
         
         this.conn = conn;          //The rpc connection we are listening on
@@ -71,6 +72,10 @@ public class RPCController extends EventController implements RPCMessageListener
             double[] tankVals = getTankDriveSpeed(command);
             dt.tankDrive(tankVals[0], tankVals[1]);
         }
+        
+        else if (message.getKey() == rpcKeys[DESIRED_SPEED_KEY]){
+            String command = message.getData();
+        }
     }
     
     /**
@@ -79,7 +84,7 @@ public class RPCController extends EventController implements RPCMessageListener
     private double[] getTankDriveSpeed(String command){
         
         //The first 7 characters are the left speed, the next 7 are the right side
-        return new double[] { Double.parseDouble(command.substring(0, 7)), Double.parseDouble(command.substring(7, 14)) };
+        return new double[] { Double.parseDouble(command.substring(0, 9)), Double.parseDouble(command.substring(9, 18)) };
     }
     
 }

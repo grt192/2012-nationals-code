@@ -5,6 +5,7 @@
 package controller;
 
 import core.EventController;
+import deploy.MechTester;
 import event.BGSystemsFXJoystickEvent;
 import event.BGSystemsFXJoystickListener;
 import event.ButtonEvent;
@@ -28,6 +29,7 @@ implements ButtonListener,
     private ShootingSystem shootingSystem;
     private Wedge wedge;
     private Drawbridge arm;
+    private MechTester test;
     
     //Joysticks
     private final GRTBGSystemsFXJoystick joy;
@@ -38,7 +40,7 @@ implements ButtonListener,
     private final GRTAttack3Joystick dtStickRight;
     
     public BetabotController(GRTBGSystemsFXJoystick joy, GRTAttack3Joystick dtStickLeft, GRTAttack3Joystick dtStickRight, ShootingSystem sys, 
-            Wedge wedge, Drawbridge arm){
+            Wedge wedge, Drawbridge arm, MechTester test){
         
         super("Mechanism Controller");
         
@@ -51,6 +53,9 @@ implements ButtonListener,
         this.shootingSystem = sys;
         this.wedge = wedge;
         this.arm = arm;
+        
+        //Set mech tester field
+        this.test = test;
         
     }
 
@@ -98,6 +103,10 @@ implements ButtonListener,
             // feeds a ball to the flywheel, which is also at full speed
             else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_TRIGGER_FULL){
                 shootingSystem.setTopTransitionSpeed(-1.0);
+            }
+            //Starts a mechanism tester - MechTester also uses KEY_GRAY_DOWN, KEY_GRAY_RIGHT, KEY_GRAY_LEFT
+            else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_GRAY_UP) {
+                test.run();
             }
         }
         
