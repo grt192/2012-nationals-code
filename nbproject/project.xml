@@ -78,13 +78,15 @@
                     <separator/>
                 </context-menu>
             </view>
-            <subprojects/>
+            <subprojects>
+                <project>/home/ajc/grt_workspace/bessycode</project>
+            </subprojects>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="boot">${sunspot.bootclasspath}</classpath>
-                <classpath mode="compile">/home/calvin/sunspotfrcsdk/lib/squawk_device.jar:/home/calvin/sunspotfrcsdk/lib/WPILibJ/classes.jar</classpath>
+                <classpath mode="compile">/home/calvin/sunspotfrcsdk/lib/squawk_device.jar:/home/calvin/sunspotfrcsdk/lib/WPILibJ/classes.jar:/home/ajc/sunspotfrcsdk/lib/WPILibJ/classes.jar</classpath>
                 <built-to>build</built-to>
                 <source-level>1.4</source-level>
             </compilation-unit>

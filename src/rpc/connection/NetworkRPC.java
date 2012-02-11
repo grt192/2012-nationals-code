@@ -96,7 +96,7 @@ public class NetworkRPC implements RPCConnection, SocketListener {
     }
 
     public void dataRecieved(SocketEvent e) {
-//        System.out.println("Data received: " + e.getData());
+        System.out.println("Data received: " + e.getData());
         notifyListeners(e.getData());
     }
 }

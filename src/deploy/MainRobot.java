@@ -10,6 +10,7 @@ import balancer.RobotTiltAccel;
 import balancer.RobotTiltGyro;
 import balancer.BalanceController;
 import controller.*;
+import controller.rpc.RPCShootingController;
 
 import logger.RPCLogger;
 import mechanism.*;
@@ -190,12 +191,20 @@ public class MainRobot extends GRTRobot {
          * *********************************************
          * LOGGING
          */
-        SensorLogger encoderLogger1 = new SensorLogger(dtEncoderLeft, rpcConn, new int[]{10, 11, 12, 13}, null);
-        SensorLogger encoderLogger2 = new SensorLogger(dtEncoderRight, rpcConn, new int[]{14, 15, 16, 17}, null);
-        encoderLogger1.start();
-        encoderLogger1.enable();
-        encoderLogger2.start();
-        encoderLogger2.enable();
+//        SensorLogger encoderLogger1 = new SensorLogger(dtEncoderLeft, rpcConn, new int[]{10, 11, 12, 13}, null);
+//        SensorLogger encoderLogger2 = new SensorLogger(dtEncoderRight, rpcConn, new int[]{14, 15, 16, 17}, null);
+//        encoderLogger1.start();
+//        encoderLogger1.enable();
+//        encoderLogger2.start();
+//        encoderLogger2.enable();
+
+        batterySensor = new GRTBatterySensor(10, "batterySEnsor");
+        batterySensor.start();
+        batterySensor.enable();
+
+        SensorLogger batteryLogger = new SensorLogger(batterySensor, rpcConn, new int[] {141}, "batteryLogger");
+        batteryLogger.start();
+        batteryLogger.enable();
 
         System.out.println("Loggers initialized");
 
@@ -204,10 +213,10 @@ public class MainRobot extends GRTRobot {
          * ****************************************
          * MECHANISM INTIALIZATION
          */
-        GRTSwitch rotationLeftSwitch = new GRTSwitch(7, 14, "Rotation Left Switch");
-        GRTSwitch rotationRightSwitch = new GRTSwitch(8, 14, "Rotation Left Switch");
-        GRTSwitch visorBottomSwitch = new GRTSwitch(9, 14, "Rotation Left Switch");
-        GRTSwitch visorUpperSwitch = new GRTSwitch(10, 14, "Rotation Left Switch");
+//        GRTSwitch rotationLeftSwitch = new GRTSwitch(7, 14, "Rotation Left Switch");
+//        GRTSwitch rotationRightSwitch = new GRTSwitch(8, 14, "Rotation Left Switch");
+//        GRTSwitch visorBottomSwitch = new GRTSwitch(9, 14, "Rotation Left Switch");
+//        GRTSwitch visorUpperSwitch = new GRTSwitch(10, 14, "Rotation Left Switch");
 
 
         Wedge wedge = new Wedge(wedgeVictor, null, null, "Wedge");
@@ -231,7 +240,10 @@ public class MainRobot extends GRTRobot {
         
         BetabotController bc = new BetabotController(tertiary, primary, secondary, ss, wedge, drawbridge, tester);
         bc.start();
-        bc.enable();        
+        
+        RPCShootingController shootControl = new RPCShootingController(rpcConn, ss, 88);
+        shootControl.start();
+//        bc.enable();
 //        ShootingDistanceTestController distTest = new ShootingDistanceTestController(primary, ss);
 
 
@@ -251,10 +263,11 @@ public class MainRobot extends GRTRobot {
          */
         addTeleopController(driveControl);
         addTeleopController(bc);
+        addTeleopController(shootControl);
 //        addTeleopController(encTest);
 //        addTeleopController(rpcController);
 //        addTeleopController(distTest);
 //        addAutonomousController(balancer);
-        System.out.println("All systems go!");
+        System.out.println("All systems go!!");
     }
 }

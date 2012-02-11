@@ -106,7 +106,7 @@ implements ButtonListener,
             }
             //Starts a mechanism tester - MechTester also uses KEY_GRAY_DOWN, KEY_GRAY_RIGHT, KEY_GRAY_LEFT
             else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_GRAY_UP) {
-                test.run();
+//                test.run();
             }
         }
         

@@ -61,43 +61,45 @@ public class ShootingSystem implements EncoderListener{
 
     //changes rotation of turret
     public void setPanSpeed(double speed) {
-        if (enable && rotationEnable) {
-            if (speed<=0.0) { //moves right
-                while(rotationAngle>-90.0) rotationMotor.setSpeed(speed); //limits movement right
-            }
-            else { //moves left
-                while(rotationAngle<90.0) rotationMotor.setSpeed(speed); //limits movement left
-            }
-        }
+        rotationMotor.setSpeed(speed);
+//        if (enable && rotationEnable) {
+//            if (speed<=0.0) { //moves right
+//                while(rotationAngle>-90.0) rotationMotor.setSpeed(speed); //limits movement right
+//            }
+//            else { //moves left
+//                while(rotationAngle<90.0) rotationMotor.setSpeed(speed); //limits movement left
+//            }
+//        }
     }
     
     //changes angle of turret visor
     public void setVisorSpeed(double speed) {
-        if (enable && visorEnable) {
-            if (speed<=0.0) {  // moves down\\
-                while(visorAngle<0.0) visorMotor.setSpeed(speed); //limits the movement of visor down
-            }
-            else {  //moves up
-                while(visorAngle>90.0) visorMotor.setSpeed(speed); //limits the movement of visor up
-            }
-        }
+        visorMotor.setSpeed(speed);
+//        if (enable && visorEnable) {
+//            if (speed<=0.0) {  // moves down\\
+//                while(visorAngle<0.0) visorMotor.setSpeed(speed); //limits the movement of visor down
+//            }
+//            else {  //moves up
+//                while(visorAngle>90.0) visorMotor.setSpeed(speed); //limits the movement of visor up
+//            }
+//        }
     }
 
 
     //changes speed of the turret flywheel
     public void setFlywheelSpeed(double speed) {
-        if (enable) {
+//        if (enable) {
             flywheelMotor1.setSpeed(speed);
             flywheelMotor2.setSpeed(speed);
-        }
+//        }
     }
 
     //changes speed of the transition into turret
     public void setTopTransitionSpeed(double speed) {
-        if (enable) {
+//        if (enable) {
             topTransMotor1.setSpeed(speed); 
             topTransMotor2.setSpeed(speed);
-        }
+//        }
     }
 
     //changes collector speed
@@ -107,10 +109,10 @@ public class ShootingSystem implements EncoderListener{
 
     //changes speed of the transition after collector
     public void setBotTransitionSpeed(double speed) {
-        if (enable) {
+//        if (enable) {
             botTransMotor1.setSpeed(speed);
             botTransMotor2.setSpeed(speed);
-        }
+//        }
     }
     
     public void enable() {
