@@ -46,6 +46,14 @@ public abstract class GRTRobot extends SimpleRobot {
 
     }
 
+    public void disabled(){
+        for (int i = 0; i < teleopControllers.size(); i++) {
+            ((EventController) teleopControllers.elementAt(i)).disable();
+        }
+        for (int i = 0; i < autoControllers.size(); i++) {
+            ((EventController) autoControllers.elementAt(i)).disable();
+        }
+    }
     /**
      * This function is called once each time the robot enters operator control.
      * All Teleop controllers are started/resumed, and all autonomous controllers are paused.
