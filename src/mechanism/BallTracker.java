@@ -4,7 +4,9 @@
  */
 package mechanism;
 
+import core.PollingSensor;
 import core.Sensor;
+import event.BallEvent;
 import event.BallTrackingListener;
 import event.SwitchEvent;
 import event.SwitchListener;
@@ -18,7 +20,7 @@ import sensor.GRTSwitch;
  * 
  * @author gerberduffy
  */
-public class BallTracker implements SwitchListener{
+public class BallTracker extends Sensor implements SwitchListener{
     
     //Ball position enumerations
     public static final int IN_LOWER_ROLLERS = 0;   //Right after being collected
@@ -26,11 +28,23 @@ public class BallTracker implements SwitchListener{
     public static final int IN_UPPER_ROLLERS = 2;   //In the upper rollers
     public static final int IN_SHOOTING_QUEUE = 3;  //The ball is queued up for shooting
     
+    //KEYS
+    public static final int KEY_NUM_BALLS = 0;
+    public static final int KEY_FIRST_BALL_POSITION = 1;
+    public static final int KEY_SECOND_BALL_POSITION = 2;
+    public static final int KEY_THIRD_BALL_POSITION = 3;
+    
+    public static final int NUM_DATA = 4;
+    
+    
     //THe limit switches that are responsible for ball tracking.
     private GRTSwitch lowerRollersSwitch;
     private GRTSwitch upperRollersSwitch;
     private GRTSwitch hopperSwitch;
     private GRTSwitch ballQueueSwitch;
+    
+    //Booleans
+    private boolean ballQueued = false;     //True if a ball is waiting to be shot.
     
     //Tracking numbers
     private int totalBalls = 0;     //Total balls in system. Starts at 0
@@ -38,11 +52,13 @@ public class BallTracker implements SwitchListener{
     //Listeners vector
     private Vector listeners;
     
-    public BallTracker(GRTSwitch lowerRollers, 
+    public BallTracker(double pollTime, 
+                       GRTSwitch lowerRollers, 
                        GRTSwitch upperRollers,
                        GRTSwitch hopper, 
                        GRTSwitch ballQueue)
-    {        
+    {
+        super("Ball Tracker");
         //Setup our instance variables
         this.lowerRollersSwitch = lowerRollers;
         this.hopperSwitch = hopper;
@@ -72,7 +88,7 @@ public class BallTracker implements SwitchListener{
      * Start listening to the count switches
      * 
      */
-    protected void enable() {
+    protected void startListening() {
         lowerRollersSwitch.addSwitchListener(this);
         hopperSwitch.addSwitchListener(this);
         upperRollersSwitch.addSwitchListener(this);
@@ -82,7 +98,7 @@ public class BallTracker implements SwitchListener{
     /**
      * Stop listening to the switches.
      */
-    protected void disable() {
+    protected void stopListening() {
         lowerRollersSwitch.removeSwitchListener(this);
         hopperSwitch.removeSwitchListener(this);
         upperRollersSwitch.removeSwitchListener(this);
@@ -106,7 +122,34 @@ public class BallTracker implements SwitchListener{
      * @param e 
      */
     public void switchStateChanged(SwitchEvent e) {
-        //TODO: Implement this.
+        BallEvent be = null;    //The event we are sending
+        if (e.getState() == GRTSwitch.PRESSED){
+            //If the switch is pressed, 
+            if (e.getSource() == lowerRollersSwitch){
+                be = new BallEvent(this, ++totalBalls, BallTracker.IN_LOWER_ROLLERS);
+            } else if (e.getSource() == upperRollersSwitch){
+                be = new BallEvent(this, ++totalBalls, BallTracker.IN_UPPER_ROLLERS);
+            } else if (e.getSource() == ballQueueSwitch){
+                be = new BallEvent(this, ++totalBalls, BallTracker.IN_SHOOTING_QUEUE);
+            }
+            
+        } 
+        //Logic for switch release.
+        else if (e.getState() == GRTSwitch.RELEASED){
+            //If the ball queue switch has been released after a ball 
+            //has been queued, we know that we have shot a ball, so decrement 
+            //the total ball count.
+            if (e.getSource() == ballQueueSwitch && ballQueued){
+                be = new BallEvent(this, --totalBalls, IN_HOPPER);
+            }
+        }
+        
+        for(int i=0; i < listeners.size(); i++){
+            ((BallTrackingListener)listeners.elementAt(i)).ballPositionChanged(be);
+        }
+    }
+
+    protected void notifyListeners(int id, double oldDatum, double newDatum) {
     }
     
 }
