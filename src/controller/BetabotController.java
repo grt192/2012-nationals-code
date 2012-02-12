@@ -6,10 +6,8 @@ package controller;
 
 import core.EventController;
 import deploy.MechTester;
-import event.BGSystemsFXJoystickEvent;
-import event.BGSystemsFXJoystickListener;
-import event.ButtonEvent;
-import event.ButtonListener;
+import event.*;
+import mechanism.BallTracker;
 import mechanism.Drawbridge;
 import mechanism.ShootingSystem;
 import mechanism.Wedge;
@@ -23,7 +21,8 @@ import sensor.GRTXBoxJoystick;
  */
 public class BetabotController extends EventController
 implements ButtonListener,
-        BGSystemsFXJoystickListener  {
+        BGSystemsFXJoystickListener,
+        BallTrackingListener{
     
     //Mechanisms
     private ShootingSystem shootingSystem;
@@ -38,6 +37,9 @@ implements ButtonListener,
     private boolean blackMod, redMod;
     private final GRTAttack3Joystick dtStickLeft;
     private final GRTAttack3Joystick dtStickRight;
+
+    //Booleans
+    private boolean maxBallsReached = false;        //True when we have all three balls
     
     public BetabotController(GRTBGSystemsFXJoystick joy, GRTAttack3Joystick dtStickLeft, GRTAttack3Joystick dtStickRight, ShootingSystem sys, 
             Wedge wedge, Drawbridge arm, MechTester test){
@@ -63,11 +65,17 @@ implements ButtonListener,
         System.out.println("listening for BG joy");
         joy.addJoystickListener(this);
         joy.addButtonListener(this);
+        
+        dtStickLeft.addButtonListener(this);
+        dtStickRight.addButtonListener(this);
     }
 
     protected void stopListening() {
         joy.removeJoystickListener(this);
         joy.removeButtonListener(this);
+        
+        dtStickLeft.removeButtonListener(this);
+        dtStickRight.removeButtonListener(this);
     }
 
 
@@ -88,11 +96,11 @@ implements ButtonListener,
             }
             //Pressing down on the black pad sets bottom rollers to full reverse
             else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_BLACK_DOWN){
-                shootingSystem.setBotTransitionSpeed(-1.0);
+                shootingSystem.setBottomTransitionSpeed(-1.0);
             } 
             //Pressing up on black pad sets bottom rollers to full collection
             else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_BLACK_UP){
-                shootingSystem.setBotTransitionSpeed(1.0);
+                shootingSystem.setBottomTransitionSpeed(1.0);
             }
 
             //Half trigger turns the fly wheel @ full speed
@@ -140,10 +148,10 @@ implements ButtonListener,
                 wedge.setWedgeSpeed(0.0);
             // BLACK PAD DOWN: TRANSITION AND FLAIL SHUTOFF
             } else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_BLACK_DOWN) {
-                shootingSystem.setBotTransitionSpeed(0.0);
+                shootingSystem.setBottomTransitionSpeed(0.0);
             //BLACK PAD UP: TRANSITION AND SPEED SHUTOFF
             } else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_BLACK_UP) {
-                shootingSystem.setBotTransitionSpeed(0.0);
+                shootingSystem.setBottomTransitionSpeed(0.0);
              //TRIGGER RELEASE
             } else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_TRIGGER_FULL) {
                 shootingSystem.setTopTransitionSpeed(0.0);
@@ -204,6 +212,42 @@ implements ButtonListener,
 
     public void twistChanged(BGSystemsFXJoystickEvent e) {
         shootingSystem.setPanSpeed(-e.getValue());
+    }
+
+    /**
+     * Respond to ball position changes
+     * @param e 
+     */
+    public void ballPositionChanged(BallEvent e) {
+        if (e.getBallPosition() == BallTracker.IN_HOPPER && maxBallsReached){
+            shootingSystem.setFlailSpeed(0.0);
+            shootingSystem.setBottomTransitionSpeed(0.0);
+            shootingSystem.disableCollection();
+        }
+    }
+
+    /**
+     * If the ball count changes, respond
+     * @param e 
+     */
+    public void ballCountChanged(BallEvent e) {
+        //If we have reached the max number of balls, we only run top rollers, 
+        //not the flails
+        if (e.getNumBalls() == 3){
+            System.out.println("We have all our balls.");
+            maxBallsReached = true;
+        } 
+        //If we have too many balls, reverse the flails so that they repel
+        else if (e.getNumBalls() > 3){
+            System.out.println("We have " + e.getNumBalls() + " balls.");
+            shootingSystem.setFlailSpeed(-1.0);
+            shootingSystem.disableCollection();
+        }
+        //If we have not filled up the number of balls, keep all systems enabled
+        else {
+            System.out.println("We only have " + e.getNumBalls() + " balls.");
+            shootingSystem.enableAllSystems();
+        }
     }
     
 }

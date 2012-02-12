@@ -15,10 +15,15 @@ package event;
 public interface BallTrackingListener {
     
     /**
-     * Respond to a ball's position 
-     * in the robot being changed.
-     * @param e 
+     * Respond to a ball entering a new positon in the robot
+     * @param e The event
      */
     public void ballPositionChanged(BallEvent e);
+    
+    /**
+     * Ball count change event.
+     * @param e The event.
+     */
+    public void ballCountChanged(BallEvent e);
     
 }

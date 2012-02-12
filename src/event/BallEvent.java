@@ -13,21 +13,29 @@ import mechanism.BallTracker;
 public class BallEvent {
     
     private BallTracker source;
-    private int newPosition;
-    private int ballId;
+    private int position;
+    private int numBalls;
     
-    public BallEvent(BallTracker source, int ballId, int newPos){
+    
+    public BallEvent(BallTracker source, int numBalls, int position){
         this.source = source;
-        this.ballId = ballId;
-        this.newPosition = newPos;
+        this.numBalls = numBalls;
+        this.position = position;
     }
     
     /**
-     * Returns the new position of the ball.
+     * Returns the number of total balls at the time of the event.
      * @return 
      */
-    public int getNewPosition(){
-        return newPosition;
+    public double getNumBalls(){
+        return numBalls;
+    }
+    
+    /**
+     * Return the position that event occured at.
+     */
+    public double getBallPosition(){
+        return position;
     }
     
     /**
@@ -37,12 +45,5 @@ public class BallEvent {
      */
     public BallTracker getSource(){
         return source;
-    }
-    
-    /**
-     * Return the id of the ball
-     */
-    public int getBallId(){
-        return ballId;
     }
 }

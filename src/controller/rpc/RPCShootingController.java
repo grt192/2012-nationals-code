@@ -11,7 +11,7 @@ import rpc.RPCMessage;
 import rpc.RPCMessageListener;
 
 /**
- * A controller that 
+ * A controller that sends RPC Messages for shooting.
  * @author gerberduffy
  */
 public class RPCShootingController extends EventController implements RPCMessageListener {

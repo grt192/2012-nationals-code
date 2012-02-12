@@ -31,14 +31,19 @@ public class ShootingSystem implements EncoderListener{
     private final GRTEncoder visorEncoder;
     
     //Other Fields
-    private boolean enable;
-    private boolean visorEnable;
-    private boolean rotationEnable;
     private double rotationAngle;
     private double visorAngle;
     
+    //Enable booleans for actuation logic.
+    private boolean visorEnabled = false;
+    private boolean rotationEnabled = false;
+    private boolean collectionEnabled = false;
+    private boolean shootingEnabled = false;
+    
     //Constants
     private double rotationRatio = 1.0/7.1; //(radius of gear/radius of lazy susan)
+
+
 
     public ShootingSystem(IMotor rotationMotor, IMotor visorMotor,
             IMotor flywheelMotor1, IMotor flywheelMotor2,
@@ -94,54 +99,139 @@ public class ShootingSystem implements EncoderListener{
 //        }
     }
 
-    //changes speed of the transition into turret
+    /**
+     * Changes speed of the transition into turret
+     * This should not be affected by any enables/disables.
+     * 
+     */
     public void setTopTransitionSpeed(double speed) {
-//        if (enable) {
             topTransMotor1.setSpeed(speed); 
             topTransMotor2.setSpeed(speed);
-//        }
     }
 
-    //changes collector speed
+    /*
+     * Changes collector speed
+     * @param speed The new Flail speed
+     */
     public void setFlailSpeed(double speed) {
-        if (enable) flailMotor1.setSpeed(speed);
+        if (collectionEnabled) {
+            flailMotor1.setSpeed(speed);
+        }
     }
 
-    //changes speed of the transition after collector
-    public void setBotTransitionSpeed(double speed) {
-//        if (enable) {
+    /**
+     * Changes speed of the transition after collector
+     */
+    public void setBottomTransitionSpeed(double speed) {
+        if (collectionEnabled) {
             botTransMotor1.setSpeed(speed);
             botTransMotor2.setSpeed(speed);
-//        }
+        }
     }
     
-    public void enable() {
-        enable = true;
+    
+    /******************************************************
+     * METHODS TO ENABLE/DISABLE DIFFERENT ASPECTS OF THE *
+     *             SHOOTING AND COLLECTION SYSTEM         *                        
+     ******************************************************/
+    
+    
+    /**
+     * Enable ALL SHOOTING/COLLECTION SYSTEMS.
+     * NOTE: You should do this for each instance of 
+     * a shooting system, as all systems are disabled
+     * by default.
+     */
+    public void enableAllSystems(){
+        enableCollection();
+        enableRotation();
+        enableVisor();
+        enableShooting();
     }
     
-    public void disable() {
-        enable = false;
+    /**
+     * Disables ALL SHOOTING/COLLECTION SYSTEMS
+     */
+    public void disableAllSystems(){
+        disableCollection();
+        disableRotation();
+        disableVisor();
+        disableShooting();
     }
-    
+    /**
+     * Enable the turret rotation
+     */
     public void enableRotation() {
-        rotationEnable = true;
+        System.out.println("enabling rotation");
+        rotationEnabled = true;
     }
 
+    /**
+     * Disable turret rotation
+     */
     public void disableRotation() {
-        rotationEnable = false;
+        rotationEnabled = false;
     }
     
+    /**
+     * Enable visor angle adjustment.
+     */
     public void enableVisor() {
-        visorEnable = true;
+        System.out.println("enabling visor");
+        visorEnabled = true;
     }
     
+    /**
+     * Disable visor angle adjustment
+     */
     public void disableVisor() {
-        visorEnable = false;
+        visorEnabled = false;
     }
     
+    /**
+     * Enable the collection mechanisms.
+     * This includes just the lower rollers and the flails
+     */
+    public void enableCollection(){
+        System.out.println("enabling collection");
+        collectionEnabled = true;
+    }
+    
+    /**
+     * Disables the collection mechanisms.
+     * This includes just the lower rollers and the flails
+     * @param e 
+     */
+    public void disableCollection(){
+        collectionEnabled = false;
+    }
+    
+    /**
+     * Enable shooting (flywheel).
+     */
+    public void enableShooting(){
+        System.out.println("enabling shooting");
+        shootingEnabled = true;
+    }
+    
+    /**
+     * Disable shooting (flywheel)
+     */
+    public void disableShooting(){
+        shootingEnabled = false;
+    }
+    
+    /**
+     * Respond to encoder direction change
+     * @param e 
+     */
     public void directionChanged(EncoderEvent e) {
     }
 
+    /**
+     * Respond to the angle change of the encoder
+     * @param e 
+     */
     public void degreeChanged(EncoderEvent e) {
         if (e.getSource() == rotationEncoder) rotationAngle = (rotationAngle + (rotationRatio * e.getAngle()));
         else if (e.getSource() == visorEncoder) visorAngle = (visorAngle + e.getAngle());
@@ -152,4 +242,5 @@ public class ShootingSystem implements EncoderListener{
 
     public void rateChanged(EncoderEvent e) {
     }
+
 }
