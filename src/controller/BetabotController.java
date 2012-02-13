@@ -122,6 +122,7 @@ implements ButtonListener,
         else if (e.getSource() == dtStickLeft){
             //LEFT TRIGGER ----> FLAILS ARE IN FULL REVERSE (REPEL BALLS)
             if (e.getButtonID() == GRTAttack3Joystick.KEY_TRIGGER){
+                System.out.println("BC::Left Trigger pressed");
                 shootingSystem.setFlailSpeed(-1.0);
             }
         }
@@ -130,6 +131,7 @@ implements ButtonListener,
         else if (e.getSource() == dtStickRight){
             //RIGHT TRIGGER ---> FLAILS ARE SET TO INTAKE
             if (e.getButtonID() == GRTAttack3Joystick.KEY_TRIGGER){
+                System.out.println("BC::Right Trigger pressed");
                 shootingSystem.setFlailSpeed(1.0);
             }
         }
@@ -207,7 +209,7 @@ implements ButtonListener,
     }
 
     public void forceYMoved(BGSystemsFXJoystickEvent e) {
-        shootingSystem.setTopTransitionSpeed(e.getValue());
+        shootingSystem.setTopTransitionSpeed(-e.getValue());
     }
 
     public void twistChanged(BGSystemsFXJoystickEvent e) {
@@ -236,15 +238,25 @@ implements ButtonListener,
         if (e.getNumBalls() == 3){
             System.out.println("We have all our balls.");
             maxBallsReached = true;
+            shootingSystem.enableAllSystems();
+            shootingSystem.disableCollection();
+            shootingSystem.setFlailSpeed(-1.0);
+
         } 
-        //If we have too many balls, reverse the flails so that they repel
+        //If we have too many balls, reverse the flails so that they repel,
+        //and disable further collection.
         else if (e.getNumBalls() > 3){
             System.out.println("We have " + e.getNumBalls() + " balls.");
-            shootingSystem.setFlailSpeed(-1.0);
             shootingSystem.disableCollection();
+            shootingSystem.setFlailSpeed(-1.0);
+
         }
         //If we have not filled up the number of balls, keep all systems enabled
         else {
+            //If we have lost a ball to now have fewer than 3, we can stop repelling
+            if (maxBallsReached){
+                shootingSystem.setFlailSpeed(0.0);
+            }
             System.out.println("We only have " + e.getNumBalls() + " balls.");
             shootingSystem.enableAllSystems();
         }

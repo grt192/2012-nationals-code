@@ -5,6 +5,8 @@
 package mechanism;
 
 import actuator.IMotor;
+import core.GRTDataLogger;
+import core.GRTLoggedProcess;
 import event.EncoderEvent;
 import event.EncoderListener;
 import sensor.GRTEncoder;
@@ -13,14 +15,14 @@ import sensor.GRTEncoder;
  *
  * @author gerberduffy, dan, nadia
  */
-public class ShootingSystem implements EncoderListener{
+public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
 
     //All of our motors
     private final IMotor rotationMotor;
     private final IMotor visorMotor;
     private final IMotor flywheelMotor1;
     private final IMotor flywheelMotor2;
-    private final IMotor flailMotor1;
+    private final IMotor flailMotor;
     private final IMotor topTransMotor1;
     private final IMotor topTransMotor2;
     private final IMotor botTransMotor1;
@@ -50,11 +52,12 @@ public class ShootingSystem implements EncoderListener{
             IMotor flailMotor,
             IMotor topTransMotor1, IMotor topTransMotor2,
             IMotor botTransMotor1, IMotor botTransMotor2, GRTEncoder rotationEncoder, GRTEncoder visorEncoder) {
+        super("Shooting System");
         this.rotationMotor = rotationMotor;
         this.visorMotor = visorMotor;
         this.flywheelMotor1 = flywheelMotor1;
         this.flywheelMotor2 = flywheelMotor2;
-        this.flailMotor1 = flailMotor;
+        this.flailMotor = flailMotor;
         this.topTransMotor1 = topTransMotor1;
         this.topTransMotor2 = topTransMotor2;
         this.botTransMotor1 = botTransMotor1;
@@ -67,6 +70,8 @@ public class ShootingSystem implements EncoderListener{
     //changes rotation of turret
     public void setPanSpeed(double speed) {
         rotationMotor.setSpeed(speed);
+        
+        log(118, speed);
 //        if (enable && rotationEnable) {
 //            if (speed<=0.0) { //moves right
 //                while(rotationAngle>-90.0) rotationMotor.setSpeed(speed); //limits movement right
@@ -115,7 +120,8 @@ public class ShootingSystem implements EncoderListener{
      */
     public void setFlailSpeed(double speed) {
         if (collectionEnabled) {
-            flailMotor1.setSpeed(speed);
+            System.out.println("SS::Setting flail speed");
+            flailMotor.setSpeed(speed);
         }
     }
 
@@ -124,6 +130,7 @@ public class ShootingSystem implements EncoderListener{
      */
     public void setBottomTransitionSpeed(double speed) {
         if (collectionEnabled) {
+            System.out.println("SS::Setting Bottom Trans speed");
             botTransMotor1.setSpeed(speed);
             botTransMotor2.setSpeed(speed);
         }
@@ -156,8 +163,7 @@ public class ShootingSystem implements EncoderListener{
         disableCollection();
         disableRotation();
         disableVisor();
-        disableShooting();
-    }
+        disableShooting();    }
     /**
      * Enable the turret rotation
      */
@@ -171,6 +177,8 @@ public class ShootingSystem implements EncoderListener{
      */
     public void disableRotation() {
         rotationEnabled = false;
+        //Halt turret actuation
+        rotationMotor.setSpeed(0.0);
     }
     
     /**
@@ -186,6 +194,8 @@ public class ShootingSystem implements EncoderListener{
      */
     public void disableVisor() {
         visorEnabled = false;
+        //Halt visor actuation
+        visorMotor.setSpeed(0.0);
     }
     
     /**
@@ -204,6 +214,10 @@ public class ShootingSystem implements EncoderListener{
      */
     public void disableCollection(){
         collectionEnabled = false;
+        //Halt all collection motors.
+        botTransMotor1.setSpeed(0.0);
+        botTransMotor2.setSpeed(0.0);
+        flailMotor.setSpeed(0.0);
     }
     
     /**
@@ -219,6 +233,9 @@ public class ShootingSystem implements EncoderListener{
      */
     public void disableShooting(){
         shootingEnabled = false;
+        //Halt all shooting actuation
+        flywheelMotor1.setSpeed(0.0);
+        flywheelMotor2.setSpeed(0.0);
     }
     
     /**

@@ -119,7 +119,6 @@ public class MainRobot extends GRTRobot {
         GRTVictor flywheelVictor2 = new GRTVictor(RIGHT_SIDECAR_MODULE, 8, "flywheel2");
         GRTVictor drawbridgeVictor = new GRTVictor(RIGHT_SIDECAR_MODULE, 5, "drawbridge");
         GRTVictor flailVictor1 = new GRTVictor(LEFT_SIDECAR_MODULE, 3, "flail1");
-//      GRTVictor flailVictor2 = new GRTVictor(LEFT_SIDECAR_MODULE, 8, "flail2");
         GRTVictor topTransVictor1 = new GRTVictor(LEFT_SIDECAR_MODULE, 5, "trans1");
         GRTVictor topTransVictor2 = new GRTVictor(LEFT_SIDECAR_MODULE, 6, "trans2");
         GRTVictor botTransVictor1 = new GRTVictor(LEFT_SIDECAR_MODULE, 7, "bottrans1");
@@ -169,7 +168,7 @@ public class MainRobot extends GRTRobot {
         dt.start();
         dt.enable();
 
-//        dt.addDataLogger(new RPCLogger(rpcConn));
+        dt.addDataLogger(new RPCLogger(rpcConn));
         robotBase = new GRTRobotBase(dt, batterySensor, dtEncoderLeft, dtEncoderRight);
         driverStation = new GRTAttack3RobotDriver(primary, secondary,
                 DRIVER_PROFILE_KEYS, DRIVER_PROFILES, -1, -1, -1, "driverStation");
@@ -213,11 +212,17 @@ public class MainRobot extends GRTRobot {
          * ****************************************
          * MECHANISM INTIALIZATION
          */
-//        GRTSwitch rotationLeftSwitch = new GRTSwitch(7, 14, "Rotation Left Switch");
-//        GRTSwitch rotationRightSwitch = new GRTSwitch(8, 14, "Rotation Left Switch");
-//        GRTSwitch visorBottomSwitch = new GRTSwitch(9, 14, "Rotation Left Switch");
-//        GRTSwitch visorUpperSwitch = new GRTSwitch(10, 14, "Rotation Left Switch");
-
+        
+        //
+        GRTSwitch collectionSwitch = new GRTSwitch(LEFT_SIDECAR_MODULE,14, 14, "Rotation Left Switch");
+        GRTSwitch upperRollersSwitch = new GRTSwitch(LEFT_SIDECAR_MODULE,13, 14, "Rotation Left Switch");
+        GRTSwitch hopperSwitch = new GRTSwitch(LEFT_SIDECAR_MODULE, 12, 14, "Rotation Left Switch");
+        GRTSwitch ballQueueSwitch = new GRTSwitch(LEFT_SIDECAR_MODULE, 11, 14, "Rotation Left Switch");
+        
+        collectionSwitch.start(); collectionSwitch.enable();
+        upperRollersSwitch.start(); upperRollersSwitch.enable();
+        hopperSwitch.start(); hopperSwitch.enable();
+        ballQueueSwitch.start(); ballQueueSwitch.enable();
 
         Wedge wedge = new Wedge(wedgeVictor, null, null, "Wedge");
         wedge.start();
@@ -232,26 +237,25 @@ public class MainRobot extends GRTRobot {
                 topTransVictor1, topTransVictor2,
                 botTransVictor1, botTransVictor2, 
                 turretRotationEncoder, turretVisorEncoder);
-        ss.enable();
-        ss.enableRotation();
-        ss.enableVisor();
+        ss.start(); ss.enable();
+        ss.enableAllSystems();      //YOU MUST DO THIS BEFORE USING THE SHOOTING SYSTEMS
+        
+        ss.addDataLogger(new RPCLogger(rpcConn));
+        
+        BallTracker bt = new BallTracker(collectionSwitch, hopperSwitch, upperRollersSwitch, ballQueueSwitch);
+        bt.start(); bt.enable();
+        
         
         MechTester tester = new MechTester(tertiary, dt, wedge, drawbridge, ss, "Mechanism Tester");
         
         BetabotController bc = new BetabotController(tertiary, primary, secondary, ss, wedge, drawbridge, tester);
-        bc.start();
+        
+        bt.addBallListener(bc);
         
         RPCShootingController shootControl = new RPCShootingController(rpcConn, ss, 88);
-        shootControl.start();
-//        bc.enable();
-//        ShootingDistanceTestController distTest = new ShootingDistanceTestController(primary, ss);
-
-
-//        
+        
 //        RPCController rpcController = new RPCController(rpcConn, new int[] {1183} , dt);
 //        rpcController.start(); rpcController.enable();
-
-//        EncoderTester encTest = new EncoderTester(encoder1);
 
         System.out.println("Mechanisms initialized");
 

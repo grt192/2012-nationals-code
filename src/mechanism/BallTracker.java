@@ -9,7 +9,7 @@ import core.Sensor;
 import event.BallEvent;
 import event.BallTrackingListener;
 import event.SwitchEvent;
-import event.SwitchListener;
+import event.SwitchListener;//If the collection switch has been pressed/released:
 import java.util.Vector;
 import sensor.GRTSwitch;
 
@@ -22,134 +22,167 @@ import sensor.GRTSwitch;
  */
 public class BallTracker extends Sensor implements SwitchListener{
     
-    //Ball position enumerations
-    public static final int IN_LOWER_ROLLERS = 0;   //Right after being collected
-    public static final int IN_HOPPER = 1;          //In the hopper 
-    public static final int IN_UPPER_ROLLERS = 2;   //In the upper rollers
-    public static final int IN_SHOOTING_QUEUE = 3;  //The ball is queued up for shooting
+    //Our switches.
+    private final GRTSwitch collectionSwitch;
+    private final GRTSwitch hopperEntranceSwitch;
+    private final GRTSwitch upperTransitionSwitch;
+    private final GRTSwitch queueSwitch;
+
+    //Numbers
+    private int totalBalls = 0;       //Number of total balls. Should start with 0.
     
-    //KEYS
-    public static final int KEY_NUM_BALLS = 0;
-    public static final int KEY_FIRST_BALL_POSITION = 1;
-    public static final int KEY_SECOND_BALL_POSITION = 2;
-    public static final int KEY_THIRD_BALL_POSITION = 3;
+    //Positon constants
+    public static final int IN_COLLECTION = 0;
+    public static final int IN_HOPPER = 1;
+    public static final int IN_UPPER_TRANSITION = 2;
+    public static final int IN_QUEUE = 3;
+    public static final int BALL_SHOT = 4;
     
-    public static final int NUM_DATA = 4;
+    //Know if a ball is queued
+    private boolean ballQueued = false;
     
-    
-    //THe limit switches that are responsible for ball tracking.
-    private GRTSwitch lowerRollersSwitch;
-    private GRTSwitch upperRollersSwitch;
-    private GRTSwitch hopperSwitch;
-    private GRTSwitch ballQueueSwitch;
-    
-    //Booleans
-    private boolean ballQueued = false;     //True if a ball is waiting to be shot.
-    
-    //Tracking numbers
-    private int totalBalls = 0;     //Total balls in system. Starts at 0
-    
-    //Listeners vector
+    //Our listeners
     private Vector listeners;
+    private boolean hopperPressed = false;
     
-    public BallTracker(double pollTime, 
-                       GRTSwitch lowerRollers, 
-                       GRTSwitch upperRollers,
-                       GRTSwitch hopper, 
-                       GRTSwitch ballQueue)
+
+    /**
+     * Constructor. Takes in all our switches.
+     * 
+     * @param collectionSwitch The switch on the collection mechanism.
+     * @param hopperEntranceSwitch Switch at the entrance to the hopper.
+     * @param upperTransitionSwitch Switch that tracks when a ball enters the upper transition area.
+     * @param queueSwitch Switch that senses when a ball is queued.
+     */
+    public BallTracker(
+            GRTSwitch collectionSwitch,
+            GRTSwitch hopperEntranceSwitch,
+            GRTSwitch upperTransitionSwitch,
+            GRTSwitch queueSwitch
+            )
     {
         super("Ball Tracker");
-        //Setup our instance variables
-        this.lowerRollersSwitch = lowerRollers;
-        this.hopperSwitch = hopper;
-        this.upperRollersSwitch = upperRollers;
-        this.ballQueueSwitch = ballQueue;
         
-        this.listeners = new Vector();
-    }
-
-    /**
-     * Add a ball listener
-     * @param l 
-     */
-    public void addListener(BallTrackingListener l){
-        listeners.addElement(l);
+        this.collectionSwitch = collectionSwitch;
+        this.hopperEntranceSwitch = hopperEntranceSwitch;
+        this.upperTransitionSwitch = upperTransitionSwitch;
+        this.queueSwitch = queueSwitch;
+        
+        listeners = new Vector();
     }
     
     /**
-     * Remove a ball listener
-     * @param l 
-     */
-    public void removeListener(BallTrackingListener l){
-        listeners.removeElement(l);
-    }
-    
-    /**
-     * Start listening to the count switches
-     * 
+     * Start listening to our switches.
      */
     protected void startListening() {
-        lowerRollersSwitch.addSwitchListener(this);
-        hopperSwitch.addSwitchListener(this);
-        upperRollersSwitch.addSwitchListener(this);
-        ballQueueSwitch.addSwitchListener(this);
+        collectionSwitch.addSwitchListener(this);
+        hopperEntranceSwitch.addSwitchListener(this);
+        upperTransitionSwitch.addSwitchListener(this);
+        queueSwitch.addSwitchListener(this);
     }
-    
+
     /**
-     * Stop listening to the switches.
+     * Stop listening to our switches.
      */
     protected void stopListening() {
-        lowerRollersSwitch.removeSwitchListener(this);
-        hopperSwitch.removeSwitchListener(this);
-        upperRollersSwitch.removeSwitchListener(this);
-        ballQueueSwitch.removeSwitchListener(this);
+        collectionSwitch.removeSwitchListener(this);
+        hopperEntranceSwitch.removeSwitchListener(this);
+        upperTransitionSwitch.removeSwitchListener(this);
+        queueSwitch.removeSwitchListener(this);
     }
 
+    
     /**
-     * Gets the total number of balls in the robot.
-     * @return The number of balls contained in the robot
+     * Add a listener.
      */
-    int getTotalBalls(){
-        return totalBalls;
+    public void addBallListener(BallTrackingListener bl){
+        listeners.addElement(bl);
     }
     
-
     /**
-     * On a switch state change, update the ball count as well as 
-     * the current ball positions.
-     * 
-     * 
-     * @param e 
+     * Remove a listener.
+     */
+    public void removeBallListener(BallTrackingListener bl){
+        listeners.removeElement(bl);
+    }
+    
+    
+    /**
+     * Respond to a switch event.
+     * @param e The switch event we are responding to.
      */
     public void switchStateChanged(SwitchEvent e) {
-        BallEvent be = null;    //The event we are sending
-        if (e.getState() == GRTSwitch.PRESSED){
-            //If the switch is pressed, 
-            if (e.getSource() == lowerRollersSwitch){
-                be = new BallEvent(this, ++totalBalls, BallTracker.IN_LOWER_ROLLERS);
-            } else if (e.getSource() == upperRollersSwitch){
-                be = new BallEvent(this, ++totalBalls, BallTracker.IN_UPPER_ROLLERS);
-            } else if (e.getSource() == ballQueueSwitch){
-                be = new BallEvent(this, ++totalBalls, BallTracker.IN_SHOOTING_QUEUE);
+        System.out.println("Ball Tracker: Switch press");
+        if (e.getSource() == collectionSwitch){
+            //If the collection switch has been pressed, we know we have one more ball
+            if (e.getState() == GRTSwitch.PRESSED){
+                BallEvent be = new BallEvent(this, ++totalBalls, IN_COLLECTION);
+                for (int i=0; i < listeners.size(); i++){
+                    ((BallTrackingListener)listeners.elementAt(i)).ballPositionChanged(be);
+                    ((BallTrackingListener)listeners.elementAt(i)).ballCountChanged(be);
+                }
             }
             
-        } 
-        //Logic for switch release.
-        else if (e.getState() == GRTSwitch.RELEASED){
-            //If the ball queue switch has been released after a ball 
-            //has been queued, we know that we have shot a ball, so decrement 
-            //the total ball count.
-            if (e.getSource() == ballQueueSwitch && ballQueued){
-                be = new BallEvent(this, --totalBalls, IN_HOPPER);
+            else if (e.getState() == GRTSwitch.RELEASED){
+                //Maybe something...
             }
         }
         
-        for(int i=0; i < listeners.size(); i++){
-            ((BallTrackingListener)listeners.elementAt(i)).ballPositionChanged(be);
+        
+        //Hopper switch pressed or released.
+        else if (e.getSource() == hopperEntranceSwitch){
+            
+            //Hopper switched: PRESSED
+            if (e.getState() == GRTSwitch.RELEASED && hopperPressed){
+                //We have pressed the hopper switch.
+                hopperPressed = true;
+            }
+            
+            //If the hopper entrance switch is released after being pressed, alert listeners.
+            if (e.getState() == GRTSwitch.RELEASED && hopperPressed){
+                BallEvent be = new BallEvent(this, totalBalls, IN_HOPPER);
+                hopperPressed = false;
+                for (int i=0; i < listeners.size(); i++){
+                    ((BallTrackingListener)listeners.elementAt(i)).ballPositionChanged(be);
+                }
+            }
         }
-    }
-
-    protected void notifyListeners(int id, double oldDatum, double newDatum) {
+        
+        //The upper rollers.
+        else if (e.getSource() == upperTransitionSwitch){
+            //If pressed, we know that a ball has entered the upper transition area and can become queued.
+            if (e.getState() == GRTSwitch.PRESSED){
+                BallEvent be = new BallEvent(this, ++totalBalls, IN_COLLECTION);
+                for (int i=0; i < listeners.size(); i++){
+                    ((BallTrackingListener)listeners.elementAt(i)).ballPositionChanged(be);
+                    ((BallTrackingListener)listeners.elementAt(i)).ballCountChanged(be);
+                }
+            }
+        }
+        
+        else if (e.getSource() == queueSwitch){
+            if (e.getState() == GRTSwitch.PRESSED){
+                ballQueued = true;
+                BallEvent be = new BallEvent(this, totalBalls, IN_QUEUE);
+                for (int i=0; i < listeners.size(); i++){
+                    ((BallTrackingListener)listeners.elementAt(i)).ballPositionChanged(be);
+                }
+            }
+            
+            else if (e.getState() == GRTSwitch.RELEASED){
+                BallEvent be = null;
+                if (ballQueued == true){
+                    be = new BallEvent(this, --totalBalls, BALL_SHOT);
+                } 
+                else {
+                    be = new BallEvent(this, totalBalls, BALL_SHOT);
+                }
+                for (int i=0; i < listeners.size(); i++){
+                    ((BallTrackingListener)listeners.elementAt(i)).ballPositionChanged(be);
+                    ((BallTrackingListener)listeners.elementAt(i)).ballCountChanged(be);
+                }
+            }
+        }
     }
     
 }
