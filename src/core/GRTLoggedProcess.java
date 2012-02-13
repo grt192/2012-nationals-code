@@ -1,5 +1,6 @@
 package core;
 
+import java.util.Vector;
 import rpc.RPCConnection;
 
 /**
@@ -13,7 +14,7 @@ import rpc.RPCConnection;
 public abstract class GRTLoggedProcess extends Thread implements IProcess {
 
 
-    private GRTDataLogger logger;
+    private Vector loggers;
 
     protected final String name;
     protected boolean enabled = false;
@@ -21,14 +22,20 @@ public abstract class GRTLoggedProcess extends Thread implements IProcess {
 
 
     public GRTLoggedProcess(String name) {
-        this.name = name;
+        this.name = name;      
+        this.loggers =  new Vector();
     }
 
     public void addDataLogger(GRTDataLogger logger){
-        this.logger = logger;
+        loggers.addElement(logger);
+    }
+    
+    public void removeDataLogger(GRTDataLogger l){
+        loggers.removeElement(l);
     }
 
     /**
+     * Network log of the message on the default channel.
      * 
      * @param message
      */
@@ -45,26 +52,40 @@ public abstract class GRTLoggedProcess extends Thread implements IProcess {
         System.out.println(toString() + "\t" + name + "\t" + message); 
     }
 
+    /**
+     * Network printing of the data on the RPC channel
+     * @param channel
+     * @param data 
+     */
     protected void log(int channel, double data){
-        if(logger != null){
-            logger.log(channel,data);
+        for( int i=0; i < loggers.size(); i++){
+            ((GRTDataLogger)loggers.elementAt(i)).log(channel, data);
+        }
+    }
+    
+    /**
+     * Network printing of "msg" on the specified RPC "channel"
+     * @param channel
+     * @param msg 
+     */
+    protected void log (int channel, String msg){
+        for( int i=0; i < loggers.size(); i++){
+            ((GRTDataLogger)loggers.elementAt(i)).log(channel, msg);
         }
     }
 
     /**
-     * 
+     * Network printing of double values
      * @param data
      */
     protected void log(double data) {
-//        System.out.println(toString() + "\t" + data);
-        if(logger != null){
-            logger.log(data);
+        for( int i=0; i < loggers.size(); i++){
+            ((GRTDataLogger)loggers.elementAt(i)).log(data);
         }
-
     }
 
     /**
-     * 
+     * Console-only print
      * @param name
      * @param data
      */

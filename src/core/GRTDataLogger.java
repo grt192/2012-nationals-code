@@ -12,7 +12,11 @@ package core;
 public interface GRTDataLogger {
 
     public void log(int channel, double data);
+    
+    public void log (int channel, String msg);
 
     public void log(double data);
+    
+    public void log(String data);
 
 }
