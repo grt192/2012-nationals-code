@@ -70,7 +70,6 @@ public class GRTBGSystemsFXJoystick extends PollingSensor{
        
         
         if (id < NUM_OF_BUTTONS) {
-            System.out.println("Notifying button to "+ buttonListeners.size());
             //ID maps directly to button ID
             ButtonEvent e = new ButtonEvent(this, id, newDatum == PRESSED);
             if (newDatum == PRESSED) { //true
@@ -84,19 +83,18 @@ public class GRTBGSystemsFXJoystick extends PollingSensor{
             }
 
         } else {
-             System.out.println("Notifying joystick to "+ joystickListeners.size());
             //we are now a joystick
             //only reach here if not a button
          BGSystemsFXJoystickEvent e = new BGSystemsFXJoystickEvent(this, id, newDatum);
          switch (id){
              case (KEY_X):
                  for (int i = 0; i < joystickListeners.size(); i++) {
-                    ((BGSystemsFXJoystickListener)joystickListeners.elementAt(i)).XAxisMoved(e);
+                    ((BGSystemsFXJoystickListener)joystickListeners.elementAt(i)).xAxisMoved(e);
                  }
                  break;
              case (KEY_Y):
                  for (int i = 0; i < joystickListeners.size(); i++) {
-                    ((BGSystemsFXJoystickListener)joystickListeners.elementAt(i)).YAxisMoved(e);
+                    ((BGSystemsFXJoystickListener)joystickListeners.elementAt(i)).yAxisMoved(e);
                  }
                  break;
              case (KEY_JOYSTICK_ANGLE):

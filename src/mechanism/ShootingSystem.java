@@ -163,7 +163,19 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
         disableCollection();
         disableRotation();
         disableVisor();
-        disableShooting();    }
+        disableShooting();    
+    }
+    
+    /**
+     * Halt ALL SYSTEMS.
+     */
+    public void haltAllSystems(){
+        haltCollection();
+        haltRotation();
+        haltShooting();
+        haltVisor();
+    }
+    
     /**
      * Enable the turret rotation
      */
@@ -214,7 +226,39 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
      */
     public void disableCollection(){
         collectionEnabled = false;
-        //Halt all collection motors.
+    }
+    
+    /**
+     * Halt rotation motor.
+     */
+    public void haltRotation(){
+        rotationMotor.setSpeed(0.0);
+    }
+    
+    /**
+     * Halt shooting motor.
+     */
+    public void haltShooting(){
+        flywheelMotor1.setSpeed(0.0);
+        flywheelMotor2.setSpeed(0.0);
+        
+        topTransMotor1.setSpeed(0.0);
+        topTransMotor2.setSpeed(0.0);
+    }
+    
+    /**
+     * Halt visor motor.
+     */
+    public void haltVisor(){
+        visorMotor.setSpeed(0.0);
+    }
+    
+    
+    
+    /**
+     * Halt all collection.
+     */
+    public void haltCollection(){
         botTransMotor1.setSpeed(0.0);
         botTransMotor2.setSpeed(0.0);
         flailMotor.setSpeed(0.0);

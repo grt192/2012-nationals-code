@@ -13,7 +13,6 @@ import mechanism.ShootingSystem;
 import mechanism.Wedge;
 import sensor.GRTAttack3Joystick;
 import sensor.GRTBGSystemsFXJoystick;
-import sensor.GRTXBoxJoystick;
 
 /**
  *
@@ -37,9 +36,13 @@ implements ButtonListener,
     private boolean blackMod, redMod;
     private final GRTAttack3Joystick dtStickLeft;
     private final GRTAttack3Joystick dtStickRight;
-
+    
+    //Number of balls we have; we start with none
+    private int numBalls = 0 ;
+    
     //Booleans
     private boolean maxBallsReached = false;        //True when we have all three balls
+    private boolean autoCollectionEnabled = false;         //True if automatic collection is enabled. Full manual collection by default.
     
     public BetabotController(GRTBGSystemsFXJoystick joy, GRTAttack3Joystick dtStickLeft, GRTAttack3Joystick dtStickRight, ShootingSystem sys, 
             Wedge wedge, Drawbridge arm, MechTester test){
@@ -60,7 +63,46 @@ implements ButtonListener,
         this.test = test;
         
     }
+    
+    /**
+     * Enable autonomous collection of balls until we reach max
+     */
+    public void enableAutoCollection(){
+        System.out.println("Starting auto ball collection...");
+        autoCollectionEnabled = true;
+        
+        
+        //Start collecting if we don't have full number of balls yet
+//        if (numBalls <= 3){
+            shootingSystem.setFlailSpeed(1.0);
+            shootingSystem.setBottomTransitionSpeed(1.0);
+            shootingSystem.setTopTransitionSpeed(-1.0);
+//        }
+        
+        //Nix ball collection by driver
+        shootingSystem.disableCollection();
+    }
+    
+    /**
+     * Disable autonomous collection, and set full manual collection
+     */
+    public void disableAutoCollection(){
+        System.out.println("Stopping auto ball collection...");
+        autoCollectionEnabled = false;
+        
+        //Reenable manual collection setting
+        shootingSystem.enableCollection();
+        
+        //Now stop all previously running shooting system mechs
+        shootingSystem.setFlailSpeed(0.0);
+        shootingSystem.setBottomTransitionSpeed(0.0);
+        shootingSystem.setTopTransitionSpeed(0.0);
+        shootingSystem.setFlywheelSpeed(0.0);
+    }
 
+    /**
+     * Start listening to joysticks.
+     */
     protected void startListening() {
         System.out.println("listening for BG joy");
         joy.addJoystickListener(this);
@@ -70,6 +112,9 @@ implements ButtonListener,
         dtStickRight.addButtonListener(this);
     }
 
+    /**
+     * Stop listening to joysticks.
+     */
     protected void stopListening() {
         joy.removeJoystickListener(this);
         joy.removeButtonListener(this);
@@ -79,6 +124,10 @@ implements ButtonListener,
     }
 
 
+    /**
+     * Respond to button press event.
+     * @param e The event.
+     */
     public void buttonPressed(ButtonEvent e) {
         System.out.println("got BG joy button "+e.getButtonID());
         
@@ -124,6 +173,13 @@ implements ButtonListener,
             if (e.getButtonID() == GRTAttack3Joystick.KEY_TRIGGER){
                 System.out.println("BC::Left Trigger pressed");
                 shootingSystem.setFlailSpeed(-1.0);
+            }
+            
+            else if (e.getButtonID() == GRTAttack3Joystick.KEY_BUTTON_3){
+                enableAutoCollection();
+            } 
+            else if (e.getButtonID() == GRTAttack3Joystick.KEY_BUTTON_2){
+                disableAutoCollection();
             }
         }
         
@@ -177,7 +233,11 @@ implements ButtonListener,
         
     }
 
-    public void XAxisMoved(BGSystemsFXJoystickEvent e) {
+    /**
+     * Empty implementation. Move along, move along...
+     * @param e The joystick event that we could care less about
+     */
+    public void xAxisMoved(BGSystemsFXJoystickEvent e) {
         
     }
 
@@ -186,7 +246,7 @@ implements ButtonListener,
      * 
      * @param e The joystick event received.
      */
-    public void YAxisMoved(BGSystemsFXJoystickEvent e) {
+    public void yAxisMoved(BGSystemsFXJoystickEvent e) {
         //If the red modifier key and the black modifier key are both unpressed:
         if (!redMod && !blackMod){
             //Set visor set-screw speed to the given y value
@@ -221,45 +281,69 @@ implements ButtonListener,
      * @param e 
      */
     public void ballPositionChanged(BallEvent e) {
-        if (e.getBallPosition() == BallTracker.IN_HOPPER && maxBallsReached){
-            shootingSystem.setFlailSpeed(0.0);
-            shootingSystem.setBottomTransitionSpeed(0.0);
-            shootingSystem.disableCollection();
+        if(e.getNumBalls() >= 3 && autoCollectionEnabled){
+            //If we have all our balls, stop our collection.
+            if (e.getBallPosition() == BallTracker.IN_HOPPER && maxBallsReached){
+                shootingSystem.haltCollection();
+                shootingSystem.enableShooting();
+            }
+            
+            else if (e.getBallPosition() == BallTracker.IN_QUEUE){
+                System.out.println("Ball queued");
+                shootingSystem.setTopTransitionSpeed(0.0);
+            }
+            
+            else {
+                enableAutoCollection();
+            }
         }
     }
 
     /**
-     * If the ball count changes, respond
+     * If the ball count changes, respond.
      * @param e 
      */
     public void ballCountChanged(BallEvent e) {
-        //If we have reached the max number of balls, we only run top rollers, 
-        //not the flails
-        if (e.getNumBalls() == 3){
-            System.out.println("We have all our balls.");
-            maxBallsReached = true;
-            shootingSystem.enableAllSystems();
-            shootingSystem.disableCollection();
-            shootingSystem.setFlailSpeed(-1.0);
+        System.out.println("We now have " + e.getNumBalls() + " balls.");
+        numBalls = e.getNumBalls();     //Set the number of balls we control.
+        //Only execute following logic if autonomous ball collection is enabled:
+        if (autoCollectionEnabled){
+            
+            //If we have reached the max number of balls, we only run top rollers, 
+            //not the flails
+            if (e.getNumBalls() == 3){
+                System.out.println("We have all our balls.");
+                maxBallsReached = true;
+                shootingSystem.enableAllSystems();
+                shootingSystem.haltCollection();
+                shootingSystem.setFlailSpeed(-1.0);
 
-        } 
-        //If we have too many balls, reverse the flails so that they repel,
-        //and disable further collection.
-        else if (e.getNumBalls() > 3){
-            System.out.println("We have " + e.getNumBalls() + " balls.");
-            shootingSystem.disableCollection();
-            shootingSystem.setFlailSpeed(-1.0);
+            } 
+            //If we have too many balls, reverse the flails so that they repel,
+            //and disable further collection.
+            else if (e.getNumBalls() > 3){
+                shootingSystem.setFlailSpeed(-1.0);
+                //VERY IMPORTANT TO DISABLE SECOND.
+                shootingSystem.disableCollection();
 
-        }
-        //If we have not filled up the number of balls, keep all systems enabled
-        else {
-            //If we have lost a ball to now have fewer than 3, we can stop repelling
-            if (maxBallsReached){
-                shootingSystem.setFlailSpeed(0.0);
             }
-            System.out.println("We only have " + e.getNumBalls() + " balls.");
+            //If we have not filled up the number of balls, keep all systems enabled
+            else {
+                //If we have lost a ball to now have fewer than 3, we can stop repelling
+                if (maxBallsReached){
+                    enableAutoCollection(); //Go back to collecting balls.
+                }
+                maxBallsReached = false;
+            }
+            
             shootingSystem.enableAllSystems();
         }
+        
+        else {
+            //If auto collection is disabled, we don't respond to anything.
+        }
+
+    
     }
     
 }
