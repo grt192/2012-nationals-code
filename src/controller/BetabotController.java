@@ -38,7 +38,7 @@ implements ButtonListener,
     private final GRTAttack3Joystick dtStickRight;
     
     //Number of balls we have; we start with none
-    private int numBalls = 0 ;
+//    private int numBalls = 0 ;
     
     //Booleans
     private boolean maxBallsReached = false;        //True when we have all three balls
@@ -305,7 +305,7 @@ implements ButtonListener,
      */
     public void ballCountChanged(BallEvent e) {
         System.out.println("We now have " + e.getNumBalls() + " balls.");
-        numBalls = e.getNumBalls();     //Set the number of balls we control.
+//        numBalls = e.getNumBalls();     //Set the number of balls we control.
         //Only execute following logic if autonomous ball collection is enabled:
         if (autoCollectionEnabled){
             

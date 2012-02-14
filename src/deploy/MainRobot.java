@@ -37,6 +37,7 @@ public class MainRobot extends GRTRobot {
     private GRTRobotDriver driverStation;
     private GRTRobotBase robotBase;
     
+    private static final int STARTING_BALLS = 2;    // # of balls we start with.
 
     public MainRobot() {
 
@@ -242,7 +243,7 @@ public class MainRobot extends GRTRobot {
         
         ss.addDataLogger(new RPCLogger(rpcConn));
         
-        BallTracker bt = new BallTracker(collectionSwitch, hopperSwitch, upperRollersSwitch, ballQueueSwitch);
+        BallTracker bt = new BallTracker(STARTING_BALLS, collectionSwitch, hopperSwitch, upperRollersSwitch, ballQueueSwitch);
         bt.start(); bt.enable();
         
         

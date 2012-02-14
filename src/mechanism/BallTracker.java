@@ -54,7 +54,7 @@ public class BallTracker extends Sensor implements SwitchListener{
      * @param upperTransitionSwitch Switch that tracks when a ball enters the upper transition area.
      * @param queueSwitch Switch that senses when a ball is queued.
      */
-    public BallTracker(
+    public BallTracker(int startingBalls,
             GRTSwitch collectionSwitch,
             GRTSwitch hopperEntranceSwitch,
             GRTSwitch upperTransitionSwitch,
@@ -62,7 +62,7 @@ public class BallTracker extends Sensor implements SwitchListener{
             )
     {
         super("Ball Tracker");
-        
+        this.totalBalls = startingBalls;        //Set the current count to what we start with
         this.collectionSwitch = collectionSwitch;
         this.hopperEntranceSwitch = hopperEntranceSwitch;
         this.upperTransitionSwitch = upperTransitionSwitch;
