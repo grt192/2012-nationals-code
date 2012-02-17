@@ -100,5 +100,11 @@ implements ButtonListener,
 
     public void buttonReleased(ButtonEvent e) {
     }
+
+    public void xAxisMoved(BGSystemsFXJoystickEvent e) {
+    }
+
+    public void yAxisMoved(BGSystemsFXJoystickEvent e) {
+    }
     
 }

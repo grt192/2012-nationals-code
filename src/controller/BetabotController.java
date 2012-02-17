@@ -152,9 +152,9 @@ implements ButtonListener,
                 shootingSystem.setBottomTransitionSpeed(1.0);
             }
 
-            //Half trigger turns the fly wheel @ full speed
+            //Half trigger turns the fly wheel @ its speed
             else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_TRIGGER_HALF){
-                shootingSystem.setFlywheelSpeed(1.0);
+                shootingSystem.startFlywheel();
             }
             //Full trigger shoots (i.e. starts the top rollers at full speed and 
             // feeds a ball to the flywheel, which is also at full speed
@@ -213,6 +213,8 @@ implements ButtonListener,
              //TRIGGER RELEASE
             } else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_TRIGGER_FULL) {
                 shootingSystem.setTopTransitionSpeed(0.0);
+            } else if (e.getButtonID() == GRTBGSystemsFXJoystick.KEY_TRIGGER_HALF){
+                shootingSystem.stopFlywheel();
             }
         }
             
@@ -269,7 +271,7 @@ implements ButtonListener,
     }
 
     public void forceYMoved(BGSystemsFXJoystickEvent e) {
-        shootingSystem.setTopTransitionSpeed(-e.getValue());
+        shootingSystem.setFlywheelRampSpeed(e.getValue());
     }
 
     public void twistChanged(BGSystemsFXJoystickEvent e) {

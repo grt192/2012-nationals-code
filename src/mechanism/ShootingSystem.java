@@ -49,6 +49,9 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
     private double rotationRatio = 1.0/7.1; //(radius of gear/radius of lazy susan)
     private boolean flywheelState = STOPPED;
     private boolean topTransitionState = STOPPED;
+    private double flywheelRampSpeed;
+    private boolean ramping;
+    private static final long RAMPING_SLEEP_TIME = 5;
 
 
 
@@ -364,6 +367,35 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
     }
 
     public void rateChanged(EncoderEvent e) {
+    }
+    
+    
+    /**
+     * Accelerate the flywheel at a constant rate.
+     * @param percentPerSecond the rate in % of total speed per second to
+     * accelerate the flywheel towards a rate of 0% or 100%.
+     */
+    public void setFlywheelRampSpeed(double percentPerSecond){
+        flywheelRampSpeed = percentPerSecond;
+        startRamping();
+    }
+
+    private void startRamping() {
+        if (ramping){
+            return;
+        }
+        else{
+            ramping = true;
+        }
+        while(currentFlywheelSpeed > 0 && currentFlywheelSpeed < 1){
+            incrementFlywheelSpeed(flywheelRampSpeed*RAMPING_SLEEP_TIME/1000);
+            try {
+                Thread.sleep(RAMPING_SLEEP_TIME);
+            } catch (InterruptedException ex) {
+                break;
+            }
+        }
+        ramping = false;
     }
 
 }
