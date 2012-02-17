@@ -27,7 +27,9 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
     private final IMotor topTransMotor2;
     private final IMotor botTransMotor1;
     private final IMotor botTransMotor2;
-    
+    public static final boolean STARTED = true;
+    public static final boolean STOPPED = !STARTED;
+
     //Encoders
     private final GRTEncoder rotationEncoder;
     private final GRTEncoder visorEncoder;
@@ -42,8 +44,11 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
     private boolean collectionEnabled = false;
     private boolean shootingEnabled = false;
     
+    private double currentFlywheelSpeed;
     //Constants
     private double rotationRatio = 1.0/7.1; //(radius of gear/radius of lazy susan)
+    private boolean flywheelState = STOPPED;
+    private boolean topTransitionState = STOPPED;
 
 
 
@@ -98,10 +103,12 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
 
     //changes speed of the turret flywheel
     public void setFlywheelSpeed(double speed) {
-//        if (enable) {
+        if (flywheelState == STARTED) {
             flywheelMotor1.setSpeed(speed);
             flywheelMotor2.setSpeed(speed);
-//        }
+        }
+        currentFlywheelSpeed = speed;
+
     }
 
     /**
@@ -164,6 +171,61 @@ public class ShootingSystem extends GRTLoggedProcess implements EncoderListener{
         disableRotation();
         disableVisor();
         disableShooting();    
+    }
+    public void stopFlywheel(){
+        double tmp = currentFlywheelSpeed;
+        setFlywheelSpeed(0);
+        currentFlywheelSpeed = tmp;
+        flywheelState = STOPPED;
+        System.out.println("Stopping fly");
+
+
+    }
+    public void startFlywheel(){
+        flywheelState = STARTED;
+        setFlywheelSpeed(currentFlywheelSpeed);
+        System.out.println("Starting fly");
+
+    }
+    public void toggleFlywheel(){
+        if (flywheelState == STARTED){
+            stopFlywheel();
+        }
+        else {
+            startFlywheel();
+        }
+    }
+    public void stopTopTransition(){
+        setTopTransitionSpeed(0);
+        topTransitionState = STOPPED;
+        System.out.println("Stopping trans");
+
+    }
+    public void startTopTransition(){
+        setTopTransitionSpeed(-1);
+         topTransitionState = STARTED;
+         System.out.println("Starting trans");
+
+    }
+    public void toggleTopTransition(){
+         if (topTransitionState == STARTED){
+             
+            stopTopTransition();
+        }
+        else {
+            startTopTransition();
+        }
+        
+    }
+    public void incrementFlywheelSpeed(double speedInc){
+        System.out.println("Setting Flywheel to: "+ (currentFlywheelSpeed  + speedInc));
+        setFlywheelSpeed(currentFlywheelSpeed  + speedInc);
+    }
+    public void loadBall(){
+        startTopTransition();
+    }
+    public void enable() {
+        enabled = true;
     }
     
     /**
